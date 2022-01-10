@@ -6,20 +6,10 @@ spring:
     nacos:
       # 配置
       config:
-        # 开发空间名称
-        namespace: #填写上面Nacos中的namespace（就是开发空间边上那段）
         # Nacos地址
         server-addr: 127.0.0.1:8848
-        # Nacos用户名
-        username: nacos
-        # Nacos用户密码
-        password: nacos
-        # Nacos文件后缀
-        file-extension: yaml
       # 发布服务时需要加上这个，不然Nacos无法监听到
       discovery:
-        # 开发空间名称
-        namespace: #填写上面Nacos中的namespace（就是开发空间边上那段）
         # Nacos地址
         server-addr: 127.0.0.1:8848
 server:
