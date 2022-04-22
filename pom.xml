@@ -12,6 +12,8 @@
     <modules>
         <module>nacos-consumer</module>
         <module>nacos-provider</module>
+        <module>nacos-provider-cluster</module>
+        <module>gateway-example</module>
     </modules>
 
     <properties>
@@ -49,11 +51,6 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
