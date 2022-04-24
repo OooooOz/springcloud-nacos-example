@@ -1,0 +1,28 @@
+server:
+  port: 8095
+
+spring:
+  application:
+    name: springcloud-gateway
+  cloud:
+    nacos:
+      # ??
+      config:
+        # Nacos??
+        server-addr: 127.0.0.1:8848
+        namespace: 744c4b3f-0415-4414-9214-84c032dc3a7a  # ??????ID
+      # ??????????????Nacos?????
+      discovery:
+        # Nacos??
+        server-addr: 127.0.0.1:8848
+        cluster-name: SZ
+        namespace: 744c4b3f-0415-4414-9214-84c032dc3a7a  # ??????ID
+    gateway:
+#      discovery:
+#        locator:
+#          enabled: true # ????????????????
+      routes:
+        - id: userinfo_user
+          uri: http://localhost:8080/
+          predicates:
+            - Path=/provider/**
