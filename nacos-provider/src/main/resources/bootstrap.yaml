@@ -7,13 +7,13 @@ spring:
       # 配置
       config:
         # Nacos地址
-        server-addr: 127.0.0.1:8848
-        namespace: a0d85536-6299-4e36-93bf-bfd567c765ca  # 命名空间，填ID
+        server-addr: 192.168.41.128:8848
+        namespace: dev  # 命名空间，填ID
       # 发布服务时需要加上这个，不然Nacos无法监听到
       discovery:
         # Nacos地址
-        server-addr: 127.0.0.1:8848
+        server-addr: 192.168.41.128:8848
         cluster-name: SZ  # 集群名称
-        namespace: a0d85536-6299-4e36-93bf-bfd567c765ca  # 命名空间，填ID
+        namespace: dev  # 命名空间，填ID
 server:
   port: 8080

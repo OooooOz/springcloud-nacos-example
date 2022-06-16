@@ -36,7 +36,7 @@ class ProviderController {
     private NacosDiscoveryProperties nacosDiscoveryProperties;
 
     @GetMapping("/getValue")
-    public String getValue(){
+    public String getValue() {
         return "[name: " + name + "]";
     }
 
@@ -44,7 +44,7 @@ class ProviderController {
     @RequestMapping(value = "/getService", method = GET)
     public List<Instance> get(@RequestParam String serviceName) throws NacosException {
         // namingService注入为null,采用nacosServiceManager获取namingService注入为null
-        namingService =  nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties());
-        return namingService.getAllInstances(serviceName);
+        namingService = nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties());
+        return namingService.getAllInstances("walmart-zt");
     }
 }
