@@ -14,6 +14,7 @@
         <module>nacos-provider</module>
         <module>nacos-provider-cluster</module>
         <module>gateway-example</module>
+        <module>rocketmq-example</module>
     </modules>
 
     <properties>
