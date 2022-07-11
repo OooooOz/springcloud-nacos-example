@@ -15,6 +15,7 @@
         <module>nacos-provider-cluster</module>
         <module>gateway-example</module>
         <module>rocketmq-example</module>
+        <module>seata-order-example</module>
     </modules>
 
     <properties>
@@ -22,6 +23,7 @@
         <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
         <spring-boot-dependencies.version>2.3.2.RELEASE</spring-boot-dependencies.version>
         <spring-cloud-alibaba-dependencies>2.2.5.RELEASE</spring-cloud-alibaba-dependencies>
+        <mybatis-spring-boot-starter.version>2.2.0</mybatis-spring-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -68,6 +70,12 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
             <version>${spring-cloud-alibaba-dependencies}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis-spring-boot-starter.version}</version>
         </dependency>
     </dependencies>
 
