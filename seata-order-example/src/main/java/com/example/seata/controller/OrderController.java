@@ -44,17 +44,10 @@ public class OrderController {
     }
 
     @PostMapping("/order/global/ts/confirm")
-    @GlobalTransactional(rollbackFor = Exception.class)
+    @GlobalTransactional
     public String globalTsConfirmOrder(Long id) {
         System.out.println("order全局事务id=================>" + RootContext.getXID());
         orderMapper.confirmOrder(id, "已确认");
-
-//        try {
-//            integralClient.globalTsAddIntegral(20);
-//        } catch (Exception e) {
-//            System.out.println("积分服务异常");
-//            throw new RuntimeException();
-//        }
 
         integralClient.globalTsAddIntegral(20);
 
