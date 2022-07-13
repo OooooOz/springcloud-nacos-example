@@ -1,12 +1,13 @@
 package com.example.integral;
 
+import io.seata.spring.annotation.datasource.EnableAutoDataSourceProxy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-//@EnableAutoDataSourceProxy
+@EnableAutoDataSourceProxy
 public class IntegralApplication {
 
     public static void main(String[] args) {
