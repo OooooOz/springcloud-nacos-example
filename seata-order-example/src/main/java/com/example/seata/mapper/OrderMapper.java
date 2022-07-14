@@ -13,4 +13,7 @@ public interface OrderMapper {
 
     @Update(value = "update seata_order set order_status = #{status} where id = #{id}")
     int confirmOrder(@Param("id") Long id, @Param("status") String status);
+
+    @Insert("insert into seata_integral(id,user_id,integral) values (null,#{userId},#{integral})")
+    int addIntegral(@Param("userId") Long userId, @Param("integral") int integral);
 }
