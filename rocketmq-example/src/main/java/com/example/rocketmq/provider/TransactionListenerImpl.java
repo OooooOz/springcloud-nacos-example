@@ -7,6 +7,8 @@ import org.apache.rocketmq.common.message.MessageExt;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+
+//@RocketMQTransactionListener
 public class TransactionListenerImpl implements TransactionListener {
     //存储事务状态信息  key:事务id  value：当前事务执行的状态
     private ConcurrentHashMap<String, Integer> localTrans = new ConcurrentHashMap<>();

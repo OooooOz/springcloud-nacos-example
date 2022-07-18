@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RocketMQMessageListener(consumerGroup = "shop-user", topic = "order-topic")
-// 事务消息监听
-//@RocketMQTransactionListener
 public class TestRocketMQListener implements RocketMQListener<String> {
 
     @Override
