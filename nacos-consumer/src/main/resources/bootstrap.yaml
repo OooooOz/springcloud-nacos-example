@@ -14,5 +14,12 @@ spring:
         server-addr: 127.0.0.1:8848
         namespace: dev  # 命名空间，填ID
         register-enabled: false  # 只消费不注册
+provider:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+    ConnectTimeout: 500 #请求连接超时时间ms
+    ReadTimeout: 1000 #请求处理的超时时间ms
 server:
   port: 8081
+
+

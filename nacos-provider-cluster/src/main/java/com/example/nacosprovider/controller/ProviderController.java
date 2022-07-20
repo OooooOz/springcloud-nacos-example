@@ -36,15 +36,16 @@ class ProviderController {
     private NacosDiscoveryProperties nacosDiscoveryProperties;
 
     @GetMapping("/getValue")
-    public String getValue(){
-        return "[name: " + name + "]";
+    public String getValue() {
+        System.out.println("=========================8082=================" + System.currentTimeMillis());
+        return "8082 ==> [name: " + name + "]";
     }
 
 
     @RequestMapping(value = "/getService", method = GET)
     public List<Instance> get(@RequestParam String serviceName) throws NacosException {
         // namingService注入为null,采用nacosServiceManager获取namingService注入为null
-        namingService =  nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties());
+        namingService = nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties());
         return namingService.getAllInstances(serviceName);
     }
 }
