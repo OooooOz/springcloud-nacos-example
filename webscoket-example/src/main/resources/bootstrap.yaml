@@ -1,0 +1,12 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /
+
+spring:
+  # 项目名称，默认情况下Nacos中配置需要和这个保持一致
+  application:
+    name: webscoket
+
+
+

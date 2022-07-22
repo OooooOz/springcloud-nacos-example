@@ -16,6 +16,8 @@
         <module>gateway-example</module>
         <module>rocketmq-example</module>
         <module>seata-order-example</module>
+        <module>seata-integral-example</module>
+        <module>webscoket-example</module>
     </modules>
 
     <properties>
@@ -24,6 +26,8 @@
         <spring-boot-dependencies.version>2.3.2.RELEASE</spring-boot-dependencies.version>
         <spring-cloud-alibaba-dependencies>2.2.5.RELEASE</spring-cloud-alibaba-dependencies>
         <mybatis-spring-boot-starter.version>2.2.0</mybatis-spring-boot-starter.version>
+        <commons-lang3.version>3.11</commons-lang3.version>
+        <fastJson.version>1.2.75</fastJson.version>
     </properties>
 
     <dependencyManagement>
@@ -77,6 +81,25 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>${mybatis-spring-boot-starter.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!--fastJson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastJson.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>
