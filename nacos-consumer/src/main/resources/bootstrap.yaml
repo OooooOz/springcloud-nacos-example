@@ -18,6 +18,18 @@ spring:
       # web-context-unify: true  # 链路模式
       transport:
         dashboard: 127.0.0.1:9091
+      datasource:
+        # https://blog.csdn.net/qq_45557455/article/details/125694278
+        # https://blog.csdn.net/Hcy_code/article/details/121186654
+        flow: #流控规则
+          nacos:
+            namespace: dev
+            server-addr: 127.0.0.1:8848
+            dataId: sentinel-nacos
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+
 provider:
   ribbon:
     NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
