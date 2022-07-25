@@ -14,6 +14,10 @@ spring:
         server-addr: 127.0.0.1:8848
         namespace: dev  # 命名空间，填ID
         register-enabled: false  # 只消费不注册
+    sentinel:
+      # web-context-unify: true  # 链路模式
+      transport:
+        dashboard: 127.0.0.1:9091
 provider:
   ribbon:
     NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
@@ -25,5 +29,8 @@ server:
 feign:
   hystrix:
     enabled: true
+#  sentinel熔断降级
+#  sentinel:
+#    enabled: true
 
 
