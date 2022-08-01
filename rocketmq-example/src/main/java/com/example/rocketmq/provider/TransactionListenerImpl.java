@@ -4,12 +4,11 @@ import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageExt;
-import org.apache.rocketmq.spring.annotation.RocketMQTransactionListener;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 
-@RocketMQTransactionListener
+//@RocketMQTransactionListener
 public class TransactionListenerImpl implements TransactionListener {
     //存储事务状态信息  key:事务id  value：当前事务执行的状态
     private ConcurrentHashMap<String, Integer> localTrans = new ConcurrentHashMap<>();
