@@ -4,6 +4,7 @@ import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,6 +31,7 @@ public class TransactionListenerImpl implements TransactionListener {
         } catch (InterruptedException e) {
             e.printStackTrace();
             localTrans.put(transactionId, 2);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return LocalTransactionState.ROLLBACK_MESSAGE;
         }
         return LocalTransactionState.COMMIT_MESSAGE;
