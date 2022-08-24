@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -31,37 +30,13 @@ public class DocumentController {
      * @return
      */
     @PostMapping("add")
-    public Blog addDocument() {
-        Long id = 1L;
-        Blog blog = new Blog();
-        blog.setBlogId(id);
-        blog.setTitle("Spring Data ElasticSearch学习教程" + id);
-        blog.setContent("这是添加单个文档的实例" + id);
-        blog.setAuthor("Tony");
-        blog.setCategory("ElasticSearch");
-        blog.setCreateTime(new Date());
-        blog.setStatus(1);
-        blog.setSerialNum(id.toString());
+    public Blog addDocument(@RequestBody Blog blog) {
 
         return elasticsearchRestTemplate.save(blog);
     }
 
     @PostMapping("add/list")
-    public Object addDocuments(Integer count) {
-        List<Blog> blogs = new ArrayList<>();
-        for (int i = 1; i <= count; i++) {
-            Long id = (long) i;
-            Blog blog = new Blog();
-            blog.setBlogId(id);
-            blog.setTitle("Spring Data ElasticSearch学习教程" + id);
-            blog.setContent("这是添加单个文档的实例" + id);
-            blog.setAuthor("Tony");
-            blog.setCategory("ElasticSearch");
-            blog.setCreateTime(new Date());
-            blog.setStatus(1);
-            blog.setSerialNum(id.toString());
-            blogs.add(blog);
-        }
+    public Object addDocuments(@RequestBody List<Blog> blogs) {
 
         return elasticsearchRestTemplate.save(blogs);
     }
@@ -145,21 +120,24 @@ public class DocumentController {
         return searchHit.getContent();
     }
 
-    @PostMapping("deleteDocumentById")
-    public String deleteDocumentById(Long id) {
+    /**
+     * @param id 文档id
+     * @return
+     */
+    @DeleteMapping("delete/id/{id}")
+    public String deleteDocumentById(@PathVariable("id") Long id) {
         return elasticsearchRestTemplate.delete(id.toString(), Blog.class);
     }
 
-    @PostMapping("deleteDocumentByQuery")
-    public void deleteDocumentByQuery(String title) {
+    @DeleteMapping("delete/blogId/{blogId}")
+    public void deleteDocumentByQuery(@PathVariable("blogId") String blogId) {
         NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.matchQuery("title", title))
-                .build();
+                .withQuery(QueryBuilders.matchQuery("blogId", blogId)).build();
 
         elasticsearchRestTemplate.delete(nativeSearchQuery, Blog.class, IndexCoordinates.of("blog"));
     }
 
-    @PostMapping("deleteDocumentAll")
+    @DeleteMapping("delete/all")
     public void deleteDocumentAll() {
         NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.matchAllQuery())
