@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.Date;
 
 @Data
-@Document(indexName = "blog", shards = 1, replicas = 1)
+@Document(indexName = "blog", shards = 3, replicas = 1)
 public class Blog {
     //此项作为id，不会写到_source里边。
     @Id
@@ -33,6 +33,10 @@ public class Blog {
     //0: 未发布（草稿） 1：已发布 2：已删除
     @Field(type = FieldType.Integer)
     private int status;
+
+    // 访问量
+    @Field(type = FieldType.Integer)
+    private int visits;
 
     //序列号，用于给外部展示的id
     @Field(type = FieldType.Keyword)

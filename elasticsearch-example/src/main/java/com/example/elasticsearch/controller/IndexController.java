@@ -1,6 +1,5 @@
 package com.example.elasticsearch.controller;
 
-import cn.hutool.json.JSONUtil;
 import com.example.elasticsearch.entry.Blog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
@@ -17,21 +16,19 @@ public class IndexController {
     @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
+    /**
+     * 指定mapping创建索引
+     *
+     * @return
+     */
     @PutMapping("/create")
     public String createIndex() {
         // 创建索引，会根据Blog类的@Document注解信息来创建
         IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(Blog.class);
         indexOperations.create();
-
-        // 配置映射，会根据Item类中的id、Field等字段来自动完成映射
-//        indexOperations.putMapping(indexOperations.createMapping(Blog.class));
+        // 手动映射
+        indexOperations.putMapping(indexOperations.createMapping(Blog.class));
         return "success";
-    }
-
-    @GetMapping("/get")
-    public String getIndex() {
-        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(Blog.class);
-        return JSONUtil.toJsonStr(indexOperations.getSettings());
     }
 
     @DeleteMapping("/delete")
@@ -39,5 +36,25 @@ public class IndexController {
         IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(Blog.class);
         indexOperations.delete();
         return indexOperations.delete();
+    }
+
+    @PostMapping("/close")
+    public Object closeIndex() {
+        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(Blog.class);
+        indexOperations.getSettings(true).put("verified_before_close", true);
+        return "success";
+    }
+
+    @GetMapping("/exists")
+    public Object existsIndex() {
+        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(Blog.class);
+        return indexOperations.exists();
+    }
+
+
+    @GetMapping("/get")
+    public Object getIndex() {
+        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(Blog.class);
+        return indexOperations;
     }
 }
