@@ -1,0 +1,1637 @@
+{
+	"info": {
+		"_postman_id": "6d0af556-7f42-4d39-9e01-e60957a07e8d",
+		"name": "Elasticsearch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Index",
+			"item": [
+				{
+					"name": "创建索引-请求",
+					"item": [
+						{
+							"name": "创建blog索引",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"title\": {\r\n                \"type\": \"text\"\r\n            },\r\n            \"category\": {\r\n                \"type\": \"keyword\"\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "创建索引-API请求",
+					"item": [
+						{
+							"name": "API-创建blog索引",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/index/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"index",
+										"create"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "判断索引存在-请求/API",
+					"item": [
+						{
+							"name": "判断blog索引存在",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"title\": {\r\n                \"type\": \"text\"\r\n            },\r\n            \"category\": {\r\n                \"type\": \"keyword\"\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-判断blog索引存在",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"title\": {\r\n                \"type\": \"text\"\r\n            },\r\n            \"category\": {\r\n                \"type\": \"keyword\"\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/index/exists",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"index",
+										"exists"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "查询索引-请求",
+					"item": [
+						{
+							"name": "查询blog索引",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9200/blog",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询所有索引",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9200/_cat/indices?v",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"_cat",
+										"indices"
+									],
+									"query": [
+										{
+											"key": "v",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "查询索引-API请求",
+					"item": [
+						{
+							"name": "API-查询blog索引",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/index/get",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"index",
+										"get"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "删除索引-请求",
+					"item": [
+						{
+							"name": "删除blog索引",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9200/blog",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "删除索引-API请求",
+					"item": [
+						{
+							"name": "API-删除blog索引",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/index/delete",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"index",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "关闭/开启索引-请求/API",
+					"item": [
+						{
+							"name": "关闭blog索引",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"title\": {\r\n                \"type\": \"text\"\r\n            },\r\n            \"category\": {\r\n                \"type\": \"keyword\"\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_close",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_close"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "开启blog索引",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"title\": {\r\n                \"type\": \"text\"\r\n            },\r\n            \"category\": {\r\n                \"type\": \"keyword\"\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_open",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_open"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-关闭blog索引",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/index/close",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"index",
+										"close"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Mapping",
+			"item": [
+				{
+					"name": "查看blog索引所有映射-请求/API",
+					"item": [
+						{
+							"name": "查看blog索引所有映射",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9200/blog/_mapping",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_mapping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查看blog索引所有映射",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/mapping/get",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"mapping",
+										"get"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "扩展blog索引所有映射-请求/API",
+					"item": [
+						{
+							"name": "扩展blog索引映射",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"properties\": {\r\n          \"content\": {\"type\": \"text\"}\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_mapping",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_mapping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-扩展blog索引映射",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/mapping/extend",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"mapping",
+										"extend"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "重建索引映射-请求",
+					"item": [
+						{
+							"name": "1.创建新re_blog索引及映射",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"title\": {\r\n                \"type\": \"text\"\r\n            },\r\n            \"category\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"content\": {\r\n                \"type\": \"keyword\"\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/re_blog",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"re_blog"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.重建re_blog索引及映射 - 数据迁移",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"source\": {\r\n        \"index\": \"blog\"\r\n    },\r\n    \"dest\": {\r\n        \"index\": \"re_blog\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/_reindex",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"_reindex"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Document",
+			"item": [
+				{
+					"name": "创建文档-请求",
+					"item": [
+						{
+							"name": "创建blog文档并设置id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"blogId\": 1,\r\n    \"title\": \"Spring Data ElasticSearch学习教程1\",\r\n    \"content\": \"这是添加单个文档的实例1\",\r\n    \"author\": \"Tony\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-24 02:09:58.633\",\r\n    \"updateTime\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_doc/100",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_doc",
+										"100"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "创建文档-API请求",
+					"item": [
+						{
+							"name": "API-创建blog文档",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"blogId\": 9,\r\n    \"title\": \"Spring Data ElasticSearch学习教程9\",\r\n    \"content\": \"内容9\",\r\n    \"author\": \"Tom\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-24 02:09:58.633\",\r\n    \"updateTime\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/document/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"document",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-批量创建blog文档",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"blogId\": 6,\r\n        \"title\": \"Spring Data ElasticSearch学习教程6\",\r\n        \"content\": \"内容6\",\r\n        \"author\": \"Jack\",\r\n        \"category\": \"ElasticSearch\",\r\n        \"status\": 1,\r\n        \"serialNum\": \"1\",\r\n        \"createTime\": \"2022-08-24 02:09:58.633\",\r\n        \"updateTime\": null\r\n    },\r\n    {\r\n        \"blogId\": 7,\r\n        \"title\": \"Spring Data ElasticSearch学习教程7\",\r\n        \"content\": \"内容7\",\r\n        \"author\": \"Jack\",\r\n        \"category\": \"ElasticSearch\",\r\n        \"status\": 1,\r\n        \"serialNum\": \"1\",\r\n        \"createTime\": \"2022-08-24 02:09:58.633\",\r\n        \"updateTime\": null\r\n    },\r\n    {\r\n        \"blogId\": 8,\r\n        \"title\": \"Spring Data ElasticSearch学习教程8\",\r\n        \"content\": \"内容8\",\r\n        \"author\": \"Jack\",\r\n        \"category\": \"ElasticSearch\",\r\n        \"status\": 1,\r\n        \"serialNum\": \"1\",\r\n        \"createTime\": \"2022-08-24 02:09:58.633\",\r\n        \"updateTime\": null\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/document/add/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"document",
+										"add",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "查询文档-请求",
+					"item": [
+						{
+							"name": "查询blog文档-根据文档id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9200/blog/_doc/100",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_doc",
+										"100"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog所有文档",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog所有文档 - Body",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t}\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - 条件查询-根据blogId查询",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match\":{\r\n            \"blogId\":2\r\n\t\t}\r\n\t}\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - 条件查询 - 完全短语匹配match_phrase",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_phrase\":{\r\n            \"title\":\"Spring Data ElasticSearch学习教程1\"\r\n\t\t}\r\n\t}\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - bool组合条件查询-must",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            // 有权重的\r\n            \"must\": [\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Jack\"\r\n                    }\r\n                },\r\n                {\r\n                    \"match\": {\r\n                        \"title\": \"Spring Data ElasticSearch学习教程2\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - bool组合条件查询-should",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            // 有权重的\r\n            \"should\": [\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Jack\"\r\n                    }\r\n                },\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Tom\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - bool组合条件查询-range",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            // 有权重的\r\n            \"should\": [\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Jack\"\r\n                    }\r\n                },\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Tom\"\r\n                    }\r\n                }\r\n            ],\r\n            \"filter\": {\r\n                \"range\": {\r\n                    \"blogId\": {\r\n                        \"gt\": 7\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - 分页查询 - from/size",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t},\r\n    \"from\": 0,  // (页码-1) * size\r\n    \"size\": 4\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - 分页查询 - 结果字段过滤_source",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t},\r\n    \"from\": 0,  // (页码-1) * size\r\n    \"size\": 4,\r\n    \"_source\":[\"blogId\",\"content\"] // 结果仅显示这两个字段\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - 分页查询 - 根据blogId降序",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": {\r\n        \"match_all\": {}\r\n    },\r\n    \"from\": 0, // (页码-1) * size\r\n    \"size\": 4,\r\n    \"_source\":[\"blogId\",\"content\"],     // 结果仅显示这两个字段\r\n    \"sort\": {                           // 先排序再分页\r\n        \"blogId\": {\r\n            \"order\": \"desc\"\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - 聚合查询 - term统计author",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"aggs\":{                                //聚合操作\r\n\t\t\"author_group\":{                    //名称，随意起名\r\n\t\t\t\"terms\":{                       //分组\r\n\t\t\t\t\"field\":\"author.keyword\"    //分组字段\r\n\t\t\t}\r\n\t\t}\r\n\t},\r\n    \"size\":0                                // 不显示source\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "查询blog文档 - 聚合查询 - avg平均status",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"aggs\":{                                //聚合操作\r\n\t\t\"visits_avg\":{                    //名称，随意起名\r\n\t\t\t\"avg\":{                       //分组\r\n\t\t\t\t\"field\":\"visits\"        //分组字段\r\n\t\t\t}\r\n\t\t}\r\n\t},\r\n    \"size\":0                                // 不显示source\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "查询文档-API请求",
+					"item": [
+						{
+							"name": "API-查询blog文档-根据id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/id/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"id",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-条件查询-根据blogId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/match/blogId/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"match",
+										"blogId",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-条件查询-短语匹配match_phrase",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/match/phrase?title=学习教程1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"match",
+										"phrase"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "学习教程1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-bool组合条件查询-must",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/match/bool/must?author=Tony&title=学习",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"match",
+										"bool",
+										"must"
+									],
+									"query": [
+										{
+											"key": "author",
+											"value": "Tony"
+										},
+										{
+											"key": "title",
+											"value": "学习"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-bool组合条件查询-should",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    \"Tony\",\r\n    \"Jack\"\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/search/get/match/bool/should",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"match",
+										"bool",
+										"should"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-bool组合条件查询-filter",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    \"Tony\",\r\n    \"Jack\"\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/search/get/match/bool/filter/7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"match",
+										"bool",
+										"filter",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-bool组合条件查询-matchPhrase",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/match/phrase?author=Tony&title=学习",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"match",
+										"phrase"
+									],
+									"query": [
+										{
+											"key": "author",
+											"value": "Tony"
+										},
+										{
+											"key": "title",
+											"value": "学习"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-查询所有",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/match/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"match",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-分页查询 - from/size",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/all/page?from=0&size=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"all",
+										"page"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-分页查询 - 结果集过滤source",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/filter",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"filter"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档-分页查询 - 根据blogId降序",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/sort?sort=blogId&order=desc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"sort"
+									],
+									"query": [
+										{
+											"key": "sort",
+											"value": "blogId"
+										},
+										{
+											"key": "order",
+											"value": "desc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档- 聚合查询 - term统计author",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/aggs/count",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"aggs",
+										"count"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-查询blog文档- 聚合查询 - avg平均status",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/search/get/aggs/avg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"search",
+										"get",
+										"aggs",
+										"avg"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "修改文档-请求",
+					"item": [
+						{
+							"name": "全量修改blog文档-根据文档id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"blogId\": 2,\r\n    \"title\": \"Spring Data ElasticSearch学习教程1\",\r\n    \"content\": \"全量修改\",\r\n    \"author\": \"全量Tony\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-24 02:09:58.633\",\r\n    \"updateTime\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_doc/100",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_doc",
+										"100"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "局部修改blog文档-根据文档id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"doc\": {\r\n        \"visits\": 10\r\n    }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9200/blog/_update/9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_update",
+										"9"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "修改文档-API请求",
+					"item": [
+						{
+							"name": "API-全量修改blog文档",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"blogId\": 2,\r\n    \"title\": \"Spring Data ElasticSearch学习教程1\",\r\n    \"content\": \"全量修改\",\r\n    \"author\": \"全量Tony\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-24 02:09:58.633\",\r\n    \"updateTime\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/document/update/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"document",
+										"update",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-局部修改blog文档-根据文档id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"blogId\": 2,\r\n    \"content\": \"局部修改11\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/document/update/part/100",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"document",
+										"update",
+										"part",
+										"100"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-批量局部修改blog文档-根据文档id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[{\r\n    \"blogId\": 2,\r\n    \"content\": \"局部修改1111\"\r\n}]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/document/update/part/list/100",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"document",
+										"update",
+										"part",
+										"list",
+										"100"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "删除文档-请求",
+					"item": [
+						{
+							"name": "删除blog文档-根据文档id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9200/blog/_doc/K7_KzYIBguHSl28p4LbP",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9200",
+									"path": [
+										"blog",
+										"_doc",
+										"K7_KzYIBguHSl28p4LbP"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "删除文档-API请求",
+					"item": [
+						{
+							"name": "API-删除blog文档-根据文档id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/document/delete/id/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"document",
+										"delete",
+										"id",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-删除blog文档-根据文blogId",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/document/delete/blogId/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"document",
+										"delete",
+										"blogId",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API-删除blog文档-删除所有文档",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/document/delete/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"document",
+										"delete",
+										"all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
