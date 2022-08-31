@@ -1,10 +1,20 @@
 package com.example.elasticsearch.controller;
 
 import com.example.elasticsearch.entry.Blog;
+import org.elasticsearch.action.admin.indices.open.OpenIndexRequest;
+import org.elasticsearch.action.admin.indices.open.OpenIndexResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CloseIndexRequest;
+import org.elasticsearch.client.indices.CloseIndexResponse;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.ReindexRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 /**
  * 本处只是展示索引的操作方法，项目中不会这样创建索引，而是手写DSL去创建。
@@ -15,6 +25,9 @@ public class IndexController {
 
     @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
+
+    @Autowired
+    private RestHighLevelClient restHighLevelClient;
 
     /**
      * 指定mapping创建索引
@@ -38,11 +51,18 @@ public class IndexController {
         return indexOperations.delete();
     }
 
-    @PostMapping("/close")
-    public Object closeIndex() {
-        IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(Blog.class);
-        indexOperations.getSettings(true).put("verified_before_close", true);
-        return "success";
+    @PostMapping("/close/{index}")
+    public Object closeIndex(@PathVariable("index") String index) throws IOException {
+        CloseIndexRequest closeIndexRequest = new CloseIndexRequest(index);
+        CloseIndexResponse closeIndexResponse = restHighLevelClient.indices().close(closeIndexRequest, RequestOptions.DEFAULT);
+        return closeIndexResponse;
+    }
+
+    @PostMapping("/open/{index}")
+    public Object openIndex(@PathVariable("index") String index) throws IOException {
+        OpenIndexRequest openIndexRequest = new OpenIndexRequest(index);
+        OpenIndexResponse openIndexResponse = restHighLevelClient.indices().open(openIndexRequest, RequestOptions.DEFAULT);
+        return openIndexResponse;
     }
 
     @GetMapping("/exists")
@@ -57,4 +77,18 @@ public class IndexController {
         IndexOperations indexOperations = elasticsearchRestTemplate.indexOps(Blog.class);
         return indexOperations;
     }
+
+    @PostMapping("/reindex")
+    public Object reIndex(String sourceIndex, String destIndex) throws IOException {
+        ReindexRequest request = new ReindexRequest();
+        request.setSourceIndices(sourceIndex);
+        request.setDestIndex(destIndex);
+        request.setSourceBatchSize(5000);
+        request.setDestOpType("create");
+        request.setConflicts("proceed");
+        BulkByScrollResponse bulkByScrollResponse = restHighLevelClient.reindex(request, RequestOptions.DEFAULT);
+
+        return bulkByScrollResponse;
+    }
+
 }

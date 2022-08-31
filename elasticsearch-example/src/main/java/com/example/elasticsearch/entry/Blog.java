@@ -33,6 +33,7 @@ public class Blog {
     //0: 未发布（草稿） 1：已发布 2：已删除
     @Field(type = FieldType.Integer)
     private int status;
+    t
 
     // 访问量
     @Field(type = FieldType.Integer)

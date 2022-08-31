@@ -2,19 +2,15 @@ package com.example.elasticsearch.controller;
 
 
 import com.example.elasticsearch.entry.Blog;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.temporal.UnsupportedTemporalTypeException;
-import java.util.List;
 
 @RestController
 @RequestMapping("document")
@@ -61,12 +57,6 @@ public class DocumentByIdController {
         return response;
     }
 
-    @PostMapping("add/list")
-    public Object addDocuments(@RequestBody List<Blog> blogs) {
-
-        return elasticsearchRestTemplate.save(blogs);
-    }
-
     /**
      * @param id 文档id
      * @return
@@ -76,13 +66,6 @@ public class DocumentByIdController {
         return elasticsearchRestTemplate.delete(id.toString(), Blog.class);
     }
 
-    @DeleteMapping("delete/blogId/{blogId}")
-    public void deleteDocumentByQuery(@PathVariable("blogId") String blogId) {
-        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.matchQuery("blogId", blogId)).build();
-
-        elasticsearchRestTemplate.delete(nativeSearchQuery, Blog.class, IndexCoordinates.of("blog"));
-    }
 
     /**
      * http://localhost:9200/blog/_doc/100

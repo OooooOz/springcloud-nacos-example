@@ -2,13 +2,10 @@ package com.example.elasticsearch.controller;
 
 
 import com.example.elasticsearch.entry.Blog;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,14 +42,5 @@ public class DocumentByBulkController {
         });
 
         elasticsearchRestTemplate.bulkUpdate(updateQueryList, IndexCoordinates.of("blog"));
-    }
-
-
-    @DeleteMapping("delete/all")
-    public void deleteDocumentAll() {
-        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.matchAllQuery())
-                .build();
-        elasticsearchRestTemplate.delete(nativeSearchQuery, Blog.class, IndexCoordinates.of("blog"));
     }
 }
