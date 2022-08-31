@@ -27,7 +27,6 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.SourceFilter;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,18 +38,6 @@ public class SearchController {
     @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
-    /**
-     * http://localhost:9200/blog/_doc/100
-     *
-     * @param id 这里的id是指文档id，并不是blog中@id的属性值
-     * @return
-     * @throws UnsupportedTemporalTypeException 如果Unsupported field: InstantSeconds异常，确认springboot版本2.3.5+
-     */
-    @GetMapping("get/id/{id}")
-    public Blog findById(@PathVariable("id") Long id) {
-        // 从索引库blog中获取指定文档id的数据，封装回Blog.class
-        return elasticsearchRestTemplate.get(id.toString(), Blog.class, IndexCoordinates.of("blog"));
-    }
 
     // ------------------------------------------------match 条件查询------------------------------------------------//
 
