@@ -958,6 +958,799 @@
 					]
 				},
 				{
+					"name": "文档查询之match查询",
+					"item": [
+						{
+							"name": "HTTP请求",
+							"item": [
+								{
+									"name": "1.创建blog_match索引 - 带第三方分词器",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"author\": {\r\n                \"type\": \"text\"\r\n            },\r\n            \"blogId\": {\r\n                \"type\": \"long\"\r\n            },\r\n            \"category\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"content\": {\r\n                \"type\": \"text\"\r\n            },\r\n            \"createTime\": {\r\n                \"type\": \"date\",\r\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS\"\r\n            },\r\n            \"serialNum\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"status\": {\r\n                \"type\": \"integer\"\r\n            },\r\n            \"title\": {\r\n                \"type\": \"text\",\r\n                \"analyzer\": \"ik_max_word\",          // 指定分词器，默认standard，有search_analyzer时必须指定\r\n                \"search_analyzer\": \"ik_max_word\"    // 查询时使用的分词器，二者最好保持一致\r\n            },\r\n            \"updateTime\": {\r\n                \"type\": \"date\",\r\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS\"\r\n            },\r\n            \"visits\": {\r\n                \"type\": \"integer\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "2.创建blog_match文档并设置id",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"blogId\": 2,\r\n    \"title\": \"ElasticSearch学习教程\",\r\n    \"content\": \"Spring Data ElasticSearch学习教程\",\r\n    \"author\": \"Tony\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-30 12:09:58.633\",\r\n    \"updateTime\": null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_doc/2",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_doc",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "3.查看blog_match索引所有映射",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_mapping",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_mapping"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog_match文档 -根据title查询 - 映射有分词器",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"match\": {\r\n            \"title\": {\r\n                \"query\": \"Spring data es教程\",\r\n                \"operator\": \"or\",\r\n                // \"analyzer\": \"ik_max_word\",\r\n                \"minimum_should_match\": \"2\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog_match文档 -根据content查询 - 映射没有分词器",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"match\": {\r\n            \"content\": {\r\n                \"query\": \"星的颜色\",\r\n                \"operator\": \"and\",\r\n                \"analyzer\": \"ik_max_word\"\r\n                // \"minimum_should_match\": \"2\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog_match文档 -根据title查询 - 映射有分词器 - 短语匹配match_phrase",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"match_phrase\": {\r\n            \"title\": {\r\n                \"query\": \"Spring教程\",\r\n                \"slop\":\"3\"\r\n                // \"analyzer\": \"ik_max_word\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog_match文档 -根据title查询 - 映射有分词器 - 短语前缀匹配match_phrase_prefix",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"match_phrase_prefix\": {\r\n            \"title\": {\r\n                \"query\": \"小白教程E\",\r\n                \"max_expansions\":\"2\",\r\n                \"slop\":\"1\"\r\n                // \"analyzer\": \"ik_max_word\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog_match文档 -根据title查询 - 映射有分词器 - 短语前缀乱序匹配match_bool_prefix",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"match_bool_prefix\": {\r\n            \"title\": {\r\n                \"query\": \"教程小白El\",\r\n                \"max_expansions\":\"2\",\r\n                // \" minimum_should_match\":\"1\",\r\n                \"operator\":\"and\"\r\n                // \"analyzer\": \"ik_max_word\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog?match所有文档-match_all",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/get/all",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"get",
+												"all"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog_match文档 -根据title查询 - 映射有分词器 - multi_match - best_fields",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"multi_match\": {\r\n            \"query\": \"广场看升旗\",\r\n            // \"tie_breaker\": 0.3,\r\n            \"fields\": [\"title\",\"content\"]\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog_match文档 -根据title查询 - 映射有分词器 - multi_match - most_fields",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"multi_match\": {\r\n            \"query\": \"天安门广场上看升旗\",\r\n            \"type\": \"most_fields\",\r\n            // \"tie_breaker\": 0.3,\r\n            \"fields\": [\"title\",\"content\"]\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog_match文档 -根据title查询 - 映射有分词器 - multi_match - cross_fields",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"multi_match\": {\r\n            \"query\": \"ElasticSearch Tony\",\r\n            \"type\": \"cross_fields\",\r\n            \"operator\": \"and\",\r\n            // \"tie_breaker\": 0.3,\r\n            \"fields\": [\r\n                \"content\",\r\n                \"author\"\r\n            ]\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "5.删除blog_match索引",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/blog_match",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "API请求",
+							"item": [
+								{
+									"name": "API-创建blog_match索引",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/index/create",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"index",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-创建blog_match文档",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"blogId\": 2,\r\n    \"title\": \"data ElasticSearch学习教程\",\r\n    \"content\": \"星星之火可以燎原\",\r\n    \"author\": \"Tony\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-30 12:09:58.633\",\r\n    \"updateTime\": null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8090/match/document/add",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"document",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查看blog_match索引所有映射",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/mapping/get",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"mapping",
+												"get"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询blog文档-条件查询-根据title - 映射有分词器",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/get/title?title=Spring data es教程&shouldMatch=1&operator=or",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"get",
+												"title"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "Spring data es教程"
+												},
+												{
+													"key": "shouldMatch",
+													"value": "1"
+												},
+												{
+													"key": "operator",
+													"value": "or"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询blog文档-条件查询-根据content - 映射没有分词器",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/get/content?content=星的颜色&shouldMatch=1&operator=or",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"get",
+												"content"
+											],
+											"query": [
+												{
+													"key": "content",
+													"value": "星的颜色"
+												},
+												{
+													"key": "shouldMatch",
+													"value": "1"
+												},
+												{
+													"key": "operator",
+													"value": "or"
+												},
+												{
+													"key": "analyzer",
+													"value": null,
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询blog文档-条件查询-根据title - 映射有分词器-短语匹配match_phrase",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/phrase/get/title?title=Spring 小白教程&slop=3",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"phrase",
+												"get",
+												"title"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "Spring 小白教程"
+												},
+												{
+													"key": "slop",
+													"value": "3"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询blog文档-条件查询-根据title - 映射有分词器- 短语前缀匹配match_phrase_prefix",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/phrase/prefix/get/title?title=小白教程E&slop=1&maxExpansions=2",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"phrase",
+												"prefix",
+												"get",
+												"title"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "小白教程E"
+												},
+												{
+													"key": "slop",
+													"value": "1"
+												},
+												{
+													"key": "maxExpansions",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询blog文档-条件查询-根据title - 映射有分词器- 短语前缀乱序匹配match_bool_prefix",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/bool/prefix/get/title?title=小白教程E&maxExpansions=2&operator=and",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"bool",
+												"prefix",
+												"get",
+												"title"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "小白教程E"
+												},
+												{
+													"key": "maxExpansions",
+													"value": "2"
+												},
+												{
+													"key": "operator",
+													"value": "and"
+												},
+												{
+													"key": "shouldMatch",
+													"value": null,
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询blog文档-条件查询-根据title - 映射有分词器 - multi_match - best_fields",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/multi?query=天安门广场上看升旗",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"multi"
+											],
+											"query": [
+												{
+													"key": "query",
+													"value": "天安门广场上看升旗"
+												},
+												{
+													"key": "tieBreaker",
+													"value": "0.3",
+													"disabled": true
+												},
+												{
+													"key": "shouldMatch",
+													"value": null,
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询blog文档-条件查询-根据title - 映射有分词器 - multi_match - most_fields",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/multi/most?query=广场看升旗",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"multi",
+												"most"
+											],
+											"query": [
+												{
+													"key": "query",
+													"value": "广场看升旗"
+												},
+												{
+													"key": "tieBreaker",
+													"value": "0.3",
+													"disabled": true
+												},
+												{
+													"key": "shouldMatch",
+													"value": null,
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询blog文档-条件查询-根据title - 映射有分词器 - multi_match - cross_fields",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/match/multi/cross?query=ElasticSearch Tony&operator=and",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"match",
+												"multi",
+												"cross"
+											],
+											"query": [
+												{
+													"key": "query",
+													"value": "ElasticSearch Tony"
+												},
+												{
+													"key": "operator",
+													"value": "and"
+												},
+												{
+													"key": "tieBreaker",
+													"value": "0.3",
+													"disabled": true
+												},
+												{
+													"key": "shouldMatch",
+													"value": null,
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询blog?match所有文档-match_all",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t}\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/blog_match/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"blog_match",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
 					"name": "URD - 根据Query",
 					"item": [
 						{
@@ -2153,7 +2946,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"analyzer\" : \"standard\",\r\n  \"text\" : \"ElasticSearch索引\"\r\n}",
+					"raw": "{\r\n  \"analyzer\" : \"ik_max_word\",\r\n  \"text\" : \"星星之火可以燎原\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2161,14 +2954,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9200/blog/_analyze",
+					"raw": "http://localhost:9200/blog_match/_analyze",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "9200",
 					"path": [
-						"blog",
+						"blog_match",
 						"_analyze"
 					]
 				}
