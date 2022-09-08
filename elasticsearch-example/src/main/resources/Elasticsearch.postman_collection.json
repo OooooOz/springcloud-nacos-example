@@ -1751,6 +1751,735 @@
 					]
 				},
 				{
+					"name": "文档查询之term查询",
+					"item": [
+						{
+							"name": "HTTP请求",
+							"item": [
+								{
+									"name": "1.创建user_term索引 - 带第三方分词器",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"address\": {\r\n                \"type\": \"text\",\r\n                \"analyzer\": \"ik_max_word\"\r\n            },\r\n            \"name\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"programming_languages\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"required_matches\": {\r\n                \"type\": \"integer\"\r\n            },\r\n            \"userId\": {\r\n                \"type\": \"long\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "2.创建user_term文档并设置id",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"userId\": 2,\r\n    \"name\": \"Tony\",\r\n    \"programming_languages\": [\"c++\",\"java\",\"php\"],\r\n    \"address\": \"China\",\r\n    \"required_matches\": \"2\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_doc/2?refresh",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_doc",
+												"2"
+											],
+											"query": [
+												{
+													"key": "refresh",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "3.查看user_term索引所有映射",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/user_term/_mapping",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_mapping"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - term",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"term\": {\r\n            \"name\": {\r\n                \"value\": \"Tony\"\r\n                //\"case_insensitive\": true // 7.10.0+版本后支持忽略大小写\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - terms",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"terms\": {\r\n                \"name\": [\r\n                    \"Tom\",\r\n                    \"Tony\"\r\n                ]\r\n            }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - terms lookup",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"terms\": {\r\n            \"name\": {\r\n                \"index\": \"blog_match\",\r\n                \"id\": \"2\",\r\n                \"path\": \"author\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - terms_set",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"terms_set\": {\r\n            \"programming_languages\": {\r\n                \"terms\": [\r\n                    \"c++\",\r\n                    \"java\",\r\n                    \"php\"\r\n                ],\r\n                \"minimum_should_match_field\": \"required_matches\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "5.删除user_term索引",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/user_term",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "API请求",
+							"item": [
+								{
+									"name": "API-创建user_term索引",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/term/index/create",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"term",
+												"index",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-创建user_term文档",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"userId\": 1,\r\n    \"name\": \"Tony\",\r\n    \"programmingLanguages\": [\"c++\",\"java\",\"php\"],\r\n    \"address\": \"China\",\r\n    \"requiredMatches\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8090/term/document/add",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"term",
+												"document",
+												"add"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查看user_term索引所有映射",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/term/mapping/get",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"term",
+												"mapping",
+												"get"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询user_term文档 - 精确查询 - term",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/term/get/name?name=Tony",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"term",
+												"get",
+												"name"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "Tony"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询user_term文档 - 精确查询 - terms",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "[\r\n    \"Tom\",\r\n    \"Tony\"\r\n]",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8090/term/get/names",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"term",
+												"get",
+												"names"
+											],
+											"query": [
+												{
+													"key": "categorys",
+													"value": "ElasticSearch term",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询user_term文档 - 精确查询 - terms lookup",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/term/get/lookup?outIndex=user_term&innerIndex=blog_match&innerId=1&innerPath=author",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"term",
+												"get",
+												"lookup"
+											],
+											"query": [
+												{
+													"key": "outIndex",
+													"value": "user_term"
+												},
+												{
+													"key": "innerIndex",
+													"value": "blog_match"
+												},
+												{
+													"key": "innerId",
+													"value": "1"
+												},
+												{
+													"key": "innerPath",
+													"value": "author"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "文档查询之bool查询",
+					"item": [
+						{
+							"name": "HTTP请求",
+							"item": [
+								{
+									"name": "1.创建user_term索引 - 带第三方分词器",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"address\": {\r\n                \"type\": \"text\",\r\n                \"analyzer\": \"ik_max_word\"\r\n            },\r\n            \"name\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"programming_languages\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"required_matches\": {\r\n                \"type\": \"integer\"\r\n            },\r\n            \"userId\": {\r\n                \"type\": \"long\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "2.创建user_term文档并设置id",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\t\t\t\t{\r\n                    \"userId\": 2,\r\n                    \"name\": \"Tom Wilson\",\r\n                    \"programming_languages\": [\r\n                        \"c++\",\r\n                        \"java\",\r\n                        \"php\"\r\n                    ],\r\n                    \"address\": \"China BJ\",\r\n                    \"required_matches\": \"2\"\r\n                }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_doc/2?refresh",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_doc",
+												"2"
+											],
+											"query": [
+												{
+													"key": "refresh",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "3.查看user_term索引所有映射",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/user_term/_mapping",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_mapping"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - bool",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            \"filter\": {\r\n                \"match\": {\r\n                    \"programming_languages\": \"java\"\r\n                }\r\n            },\r\n            \"must\": {\r\n                \"term\": {\r\n                    \"required_matches\": \"2\"\r\n                }\r\n            },\r\n            \"should\": [\r\n                {\r\n                    \"match\": {\r\n                        \"address\": \"SZ\"\r\n                    }\r\n                },\r\n                {\r\n                    \"term\": {\r\n                        \"name\": \"Tom Wilson\"\r\n                    }\r\n                }\r\n            ],\r\n            \"minimum_should_match\": 1\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-查询user_term文档 - 精确查询 - bool",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            \"filter\": {\r\n                \"match\": {\r\n                    \"programming_languages\": \"java\"\r\n                }\r\n            },\r\n            \"must\": {\r\n                \"term\": {\r\n                    \"required_matches\": \"2\"\r\n                }\r\n            },\r\n            \"should\": [\r\n                {\r\n                    \"match\": {\r\n                        \"address\": \"SZ\"\r\n                    }\r\n                },\r\n                {\r\n                    \"term\": {\r\n                        \"name\": \"Tom Wilson\"\r\n                    }\r\n                }\r\n            ],\r\n            \"minimum_should_match\": 1\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8090/bool/get",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"bool",
+												"get"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - bool.must",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            \"must\": [\r\n                {\r\n                    \"match\": {\r\n                        \"address\": \"SZ\"\r\n                    }\r\n                },\r\n                {\r\n                    \"term\": {\r\n                        \"name\": \"Tom Wilson\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - bool.should",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            \"should\": [\r\n                {\r\n                    \"match\": {\r\n                        \"address\": \"SZ\"\r\n                    }\r\n                },\r\n                {\r\n                    \"term\": {\r\n                        \"name\": \"Tom Wilson\"\r\n                    }\r\n                }\r\n            ],\r\n            \"minimum_should_match\": 2\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - bool.filter",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            \"filter\": [\r\n                {\r\n                    \"match\": {\r\n                        \"address\": \"SZ\"\r\n                    }\r\n                },\r\n                {\r\n                    \"term\": {\r\n                        \"name\": \"Tom Wilson\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "4.查询user_term文档 - 精确查询 - bool.filter - constant_score",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"query\": {\r\n        \"constant_score\": {\r\n            \"filter\": {\r\n                // \"match\": {\r\n                //     \"address\": \"China\"\r\n                // }\r\n                \"bool\": {\r\n                    \"must\": [\r\n                        {\r\n                            \"match\": {\r\n                                \"address\": \"SZ\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"term\": {\r\n                                \"name\": \"Tom Wilson\"\r\n                            }\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "5.删除user_term索引",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/user_term",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
 					"name": "URD - 根据Query",
 					"item": [
 						{
