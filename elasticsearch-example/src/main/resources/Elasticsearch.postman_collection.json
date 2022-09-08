@@ -2480,469 +2480,1257 @@
 					]
 				},
 				{
-					"name": "URD - 根据Query",
+					"name": "文档操作之bulk",
 					"item": [
 						{
-							"name": "创建文档",
+							"name": "批量插入",
 							"item": [
 								{
-									"name": "HTTP-创建blog文档并设置id",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"blogId\": 1,\r\n    \"title\": \"ElasticSearch学习教程1\",\r\n    \"content\": \"中华人民共和国\",\r\n    \"author\": \"Tony\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-30 12:09:58.633\",\r\n    \"updateTime\": null\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "批量操作之-批量插入create/index",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"index\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"userId\":1,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China BJ\",\"required_matches\":\"2\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"userId\":2,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China SZ\",\"required_matches\":\"2\"}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													]
 												}
-											}
+											},
+											"response": []
 										},
-										"url": {
-											"raw": "http://localhost:9200/blog/_doc/1",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "9200",
-											"path": [
-												"blog",
-												"_doc",
-												"1"
-											]
+										{
+											"name": "批量操作之-批量插入create/index Copy",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"index\" : {\"_id\" : \"1\" } }\r\n{\"userId\":1,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China BJ\",\"required_matches\":\"2\"}\r\n{ \"create\" : {\"_id\" : \"2\" } }\r\n{\"userId\":2,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China SZ\",\"required_matches\":\"2\"}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_bulk"
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
 								},
 								{
-									"name": "API-创建blog文档",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"blogId\": 2,\r\n    \"title\": \"ElasticSearch学习教程2\",\r\n    \"content\": \"中华人民共和国2\",\r\n    \"author\": \"Tom\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-30 12:09:58.633\",\r\n    \"updateTime\": null\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
+									"name": "API请求",
+									"item": [
+										{
+											"name": "API-批量创建user_term文档 - bulk",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[\r\n    {\r\n        \"userId\": 3,\r\n        \"name\": \"Tony\",\r\n        \"programmingLanguages\": [\r\n            \"c++\",\r\n            \"java\",\r\n            \"php\"\r\n        ],\r\n        \"address\": \"China BJ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 4,\r\n        \"name\": \"Tom Wilson\",\r\n        \"programmingLanguages\": [\r\n            \"c++\",\r\n            \"java\",\r\n            \"php\"\r\n        ],\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 2\r\n    }\r\n]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/bulk/index",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"bulk",
+														"index"
+													]
 												}
-											}
+											},
+											"response": []
 										},
-										"url": {
-											"raw": "http://localhost:8090/document/add",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "8090",
-											"path": [
-												"document",
-												"add"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "API-批量创建blog文档",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "[\r\n    {\r\n        \"blogId\": 6,\r\n        \"title\": \"Spring Data ElasticSearch学习教程6\",\r\n        \"content\": \"内容6\",\r\n        \"author\": \"Jack\",\r\n        \"category\": \"ElasticSearch\",\r\n        \"status\": 1,\r\n        \"serialNum\": \"1\",\r\n        \"createTime\": \"2022-08-24 02:09:58.633\",\r\n        \"updateTime\": null\r\n    },\r\n    {\r\n        \"blogId\": 7,\r\n        \"title\": \"Spring Data ElasticSearch学习教程7\",\r\n        \"content\": \"内容7\",\r\n        \"author\": \"Jack\",\r\n        \"category\": \"ElasticSearch\",\r\n        \"status\": 1,\r\n        \"serialNum\": \"1\",\r\n        \"createTime\": \"2022-08-24 02:09:58.633\",\r\n        \"updateTime\": null\r\n    },\r\n    {\r\n        \"blogId\": 8,\r\n        \"title\": \"Spring Data ElasticSearch学习教程8\",\r\n        \"content\": \"内容8\",\r\n        \"author\": \"Jack\",\r\n        \"category\": \"ElasticSearch\",\r\n        \"status\": 1,\r\n        \"serialNum\": \"1\",\r\n        \"createTime\": \"2022-08-24 02:09:58.633\",\r\n        \"updateTime\": null\r\n    }\r\n]",
-											"options": {
-												"raw": {
-													"language": "json"
+										{
+											"name": "API-批量创建user_term文档 - save",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[\r\n    {\r\n        \"userId\": 1,\r\n        \"name\": \"TonyA\",\r\n        \"programmingLanguages\": [\r\n            \"c++\",\r\n            \"java\",\r\n            \"php\"\r\n        ],\r\n        \"address\": \"China BJ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 2,\r\n        \"name\": \"Tom\",\r\n        \"programmingLanguages\": [\r\n            \"c++\",\r\n            \"java\",\r\n            \"php\"\r\n        ],\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 2\r\n    }\r\n]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/save/list",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"save",
+														"list"
+													]
 												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:8090/document/add/list",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "8090",
-											"path": [
-												"document",
-												"add",
-												"list"
-											]
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
 								}
 							]
 						},
 						{
-							"name": "全量修改文档",
+							"name": "批量更新",
 							"item": [
 								{
-									"name": "HTTP-全量修改blog文档-根据文档id",
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"blogId\": 1,\r\n    \"title\": \"ElasticSearch学习教程1\",\r\n    \"content\": \"中华人民共和国-全量修改\",\r\n    \"author\": \"Tony\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"serialNum\": \"1\",\r\n    \"createTime\": \"2022-08-30 12:09:58.633\",\r\n    \"updateTime\": \"2022-08-30 13:09:58.633\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "批量操作之-批量更新update",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"doc\": {\"userId\":1,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\",\"js\"],\"address\":\"China BJ\",\"required_matches\":\"2\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"doc\": {\"address\": \"China HZ\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"3\" } }\r\n{\"doc\": {\"address\": \"China HZ\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"4\" } }\r\n{\"doc\": {\"address\": \"China HZ\"},  \"doc_as_upsert\" : true}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"5\" } }\r\n{ \"script\" : { \"source\": \"ctx._source.address = params.address\", \"lang\" : \"painless\", \"params\" : {\"address\" : \"China SH\"}}, \"upsert\" : {\"address\" : \"China SZ\"}}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													]
 												}
-											}
+											},
+											"response": []
 										},
-										"url": {
-											"raw": "http://localhost:9200/blog/_doc/1",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "9200",
-											"path": [
-												"blog",
-												"_doc",
-												"1"
-											]
+										{
+											"name": "批量操作之-条件更新_update_by_query",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"script\": {\r\n        \"source\": \"ctx._source.address = params.address;\",\r\n        \"lang\": \"painless\",\r\n        \"params\": {\r\n            \"address\": \"China SH\"\r\n        }\r\n    },\r\n    \"query\": {\r\n        \"match\": {\r\n            \"name\": \"Tom\"\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_update_by_query",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_update_by_query"
+													],
+													"query": [
+														{
+															"key": "conflicts",
+															"value": "proceed",
+															"disabled": true
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "批量操作之-批量更新update -?filter_path=items.*.error",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"doc\": {\"userId\":1,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\",\"js\"],\"address\":\"China BJ\",\"required_matches\":\"2\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"doc\": {\"address\": \"China HZ\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"3\" } }\r\n{\"doc\": {\"address\": \"China HZ\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"4\" } }\r\n{\"doc\": {\"address\": \"China HZ\"},  \"doc_as_upsert\" : true}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"5\" } }\r\n{ \"script\" : { \"source\": \"ctx._source.address += params.address\", \"lang\" : \"painless\", \"params\" : {\"address\" : \"China SH\"}}, \"upsert\" : {\"address\" : \"China SZ\"}}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk?filter_path=items.*.error",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													],
+													"query": [
+														{
+															"key": "filter_path",
+															"value": "items.*.error"
+														}
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
 								},
 								{
-									"name": "API-全量修改blog文档",
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"blogId\": 1,\r\n    \"title\": \"ElasticSearch学习教程1\",\r\n    \"content\": \"中华人民共和国-全量修改\",\r\n    \"author\": \"Tony\",\r\n    \"category\": \"ElasticSearch\",\r\n    \"status\": 1,\r\n    \"createTime\": \"2022-08-30 12:09:58.633\",\r\n    \"updateTime\": \"2022-08-30 13:09:58.633\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
+									"name": "API请求",
+									"item": [
+										{
+											"name": "API-批量操作之-批量更新update",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[\r\n    {\r\n        \"userId\": 1,\r\n        \"name\": \"Tony\",\r\n        \"programmingLanguages\": [\r\n            \"c++\",\r\n            \"java\",\r\n            \"php\"\r\n        ],\r\n        \"address\": \"China BJ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 4,\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 5,\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 3\r\n    }\r\n]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/bulk/update",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"bulk",
+														"update"
+													]
 												}
-											}
+											},
+											"response": []
 										},
-										"url": {
-											"raw": "http://localhost:8090/document/update/all",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "8090",
-											"path": [
-												"document",
-												"update",
-												"all"
-											]
+										{
+											"name": "API-批量操作之-条件更新_update_by_query",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"address\": \"China BJ\"\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/update/Tom",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"update",
+														"Tom"
+													],
+													"query": [
+														{
+															"key": "conflicts",
+															"value": "proceed",
+															"disabled": true
+														}
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
 								}
 							]
 						},
 						{
-							"name": "局部修改文档",
+							"name": "批量删除",
 							"item": [
 								{
-									"name": "HTTP-局部修改blog文档-根据文档id",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"doc\": {\r\n        \"visits\": 10\r\n    }\r\n}\r\n",
-											"options": {
-												"raw": {
-													"language": "json"
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "批量操作之-批量删除delete",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\"delete\": {\"_id\": 1}}\r\n{\"delete\": {\"_id\": 2}}\r\n{\"delete\": {\"_id\": 3}}\r\n{\"delete\": {\"_id\": 4}}\r\n\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_bulk"
+													]
 												}
-											}
+											},
+											"response": []
 										},
-										"url": {
-											"raw": "http://localhost:9200/blog/_update/1",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "9200",
-											"path": [
-												"blog",
-												"_update",
-												"1"
-											]
+										{
+											"name": "批量操作之-批量删除_delete_by_query",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"query\": {\r\n        // \"match_all\": {}\r\n        \"match\": {\r\n            \"name\": \"Tom\"\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_delete_by_query",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_delete_by_query"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "批量操作之-批量更新update -?filter_path=items.*.error",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"doc\": {\"userId\":1,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\",\"js\"],\"address\":\"China BJ\",\"required_matches\":\"2\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"doc\": {\"address\": \"China HZ\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"3\" } }\r\n{\"doc\": {\"address\": \"China HZ\"}}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"4\" } }\r\n{\"doc\": {\"address\": \"China HZ\"},  \"doc_as_upsert\" : true}\r\n{ \"update\" : {\"_index\" : \"user_term\",\"_id\" : \"5\" } }\r\n{ \"script\" : { \"source\": \"ctx._source.address += params.address\", \"lang\" : \"painless\", \"params\" : {\"address\" : \"China SH\"}}, \"upsert\" : {\"address\" : \"China SZ\"}}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk?filter_path=items.*.error",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													],
+													"query": [
+														{
+															"key": "filter_path",
+															"value": "items.*.error"
+														}
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
 								},
 								{
-									"name": "局部修改blog文档-根据Query",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n  \"script\": {\r\n    \"source\": \"ctx._source.content='abcd';ctx._source.title='aabbcc';\",\r\n    \"lang\": \"painless\"\r\n  },\r\n  \"query\": {\r\n    \"term\": {\r\n      \"blogId\": \"2\"\r\n    }\r\n  }\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
+									"name": "API请求",
+									"item": [
+										{
+											"name": "API-批量操作之-批量删除",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[1,2]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/bulk/delete",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"bulk",
+														"delete"
+													]
 												}
-											}
+											},
+											"response": []
 										},
-										"url": {
-											"raw": "http://localhost:9200/blog/_update_by_query",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "9200",
-											"path": [
-												"blog",
-												"_update_by_query"
-											]
+										{
+											"name": "API-批量操作之-批量删除_delete_by_query",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/delete/Tom",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"delete",
+														"Tom"
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "文档操作之其它查询",
+					"item": [
+						{
+							"name": "_mget多文档查询",
+							"item": [
+								{
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "_mget多文档查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"docs\" : [\r\n        {\r\n            \"_id\" : \"1\",\r\n            \"_source\" : {\r\n                // \"exclude\": [\"name\"] // _source显示除了exclude的字段\r\n                \"include\": [\"name\",\"address\"] // _source只显示include的字段\r\n            }\r\n        },\r\n        {\r\n             \"_index\" : \"user_term\",\r\n            \"_id\" : \"2\"\r\n        }\r\n    ]\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_doc/_mget",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_doc",
+														"_mget"
+													]
+												}
+											},
+											"response": []
+										}
+									]
 								},
 								{
-									"name": "API-局部修改blog文档-根据Query",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"blogId\": \"2\",\r\n    \"content\": \"111111\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
+									"name": "API请求",
+									"item": [
+										{
+											"name": "API-_mget多文档查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[\"1\",\"2\"]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/mget",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"mget"
+													]
 												}
-											}
+											},
+											"response": []
 										},
-										"url": {
-											"raw": "http://localhost:8090/document/update/blog",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "8090",
-											"path": [
-												"document",
-												"update",
-												"blog"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "API-局部修改blog文档-根据文档id",
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"content\": \"中华人民共和国-局部修改\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
+										{
+											"name": "API-_msearch多文档查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[\"1\",\"2\"]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/mSearch",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"mSearch"
+													]
 												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:8090/document/update/part/1",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "8090",
-											"path": [
-												"document",
-												"update",
-												"part",
-												"1"
-											]
+											},
+											"response": []
 										}
-									},
-									"response": []
-								},
-								{
-									"name": "API-批量局部修改blog文档-根据文档id",
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "[{\r\n    \"blogId\": 2,\r\n    \"content\": \"局部修改1111\"\r\n}]",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:8090/document/update/part/list/100",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "8090",
-											"path": [
-												"document",
-												"update",
-												"part",
-												"list",
-												"100"
-											]
-										}
-									},
-									"response": []
+									]
 								}
 							]
 						},
 						{
-							"name": "删除文档",
+							"name": "range范围查询",
 							"item": [
 								{
-									"name": "HTTP-删除blog文档-根据文档id",
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "http://localhost:9200/blog/_doc/1",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "9200",
-											"path": [
-												"blog",
-												"_doc",
-												"1"
-											]
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "批量操作之-批量插入create/index",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"index\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"userId\":1,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China BJ\",\"required_matches\":\"1\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"userId\":2,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China SZ\",\"required_matches\":\"2\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"3\" } }\r\n{\"userId\":3,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China HZ\",\"required_matches\":\"3\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"4\" } }\r\n{\"userId\":4,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China SZ\",\"required_matches\":\"4\"}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "范围查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"query\": {\r\n        \"range\" : {\r\n            \"userId\" : {\r\n                \"gt\" : 2,\r\n                \"lte\" : 4\r\n            }\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
 								},
 								{
-									"name": "API-删除blog文档-根据文档id",
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "http://localhost:8090/document/delete/id/1",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "8090",
-											"path": [
-												"document",
-												"delete",
-												"id",
-												"1"
-											]
+									"name": "API请求",
+									"item": [
+										{
+											"name": "range范围查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[\r\n    {\r\n        \"userId\": 1,\r\n        \"name\": \"Tony\",\r\n        \"programmingLanguages\": [\r\n            \"c++\",\r\n            \"java\",\r\n            \"php\"\r\n        ],\r\n        \"address\": \"China BJ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 4,\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 5,\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 3\r\n    }\r\n]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/search/range",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"search",
+														"range"
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
 								}
 							]
 						},
 						{
-							"name": "查询文档",
+							"name": "fuzzy 模糊查询",
 							"item": [
 								{
-									"name": "HTTP-查询blog文档-根据文档id",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "http://localhost:9200/blog/_doc/1",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "9200",
-											"path": [
-												"blog",
-												"_doc",
-												"1"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "HTTP-查询blog所有文档",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "http://localhost:9200/blog/_search",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "9200",
-											"path": [
-												"blog",
-												"_search"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "HTTP-查询blog所有文档 - Body",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t}\r\n}\r\n",
-											"options": {
-												"raw": {
-													"language": "json"
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "1.创建user_term索引 - 带第三方分词器 Copy",
+											"request": {
+												"method": "PUT",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"address\": {\r\n                \"type\": \"text\",\r\n                \"analyzer\": \"ik_max_word\"\r\n            },\r\n            \"name\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"programming_languages\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"required_matches\": {\r\n                \"type\": \"integer\"\r\n            },\r\n            \"userId\": {\r\n                \"type\": \"long\"\r\n            }\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term"
+													]
 												}
-											}
+											},
+											"response": []
 										},
-										"url": {
-											"raw": "http://localhost:9200/blog/_search",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "9200",
-											"path": [
-												"blog",
-												"_search"
-											]
+										{
+											"name": "批量操作之-批量插入create/index",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"index\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"userId\":1,\"name\":\"李嘉图\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China BJ\",\"required_matches\":\"1\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"userId\":2,\"name\":\"李嘉欣\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China SZ\",\"required_matches\":\"2\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"3\" } }\r\n{\"userId\":3,\"name\":\"王嘉欣\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China HZ\",\"required_matches\":\"3\"}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "模糊查询-fuzzy",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"query\": {\r\n        \"fuzzy\": {\r\n            \"name\": {\r\n                \"value\": \"李嘉欣\",\r\n                \"fuzziness\": \"1\",\r\n                \"prefix_length\": 2,\r\n                \"max_expansions\": 50\r\n            }\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "模糊查询-match.fuzzy",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n  \"query\": {\r\n    \"match\": {\r\n      \"name\": {\r\n        \"query\": \"李嘉欣\",\r\n        \"fuzziness\": 1,\r\n        \"prefix_length\": 2,\r\n        \"max_expansions\": 50\r\n      }\r\n    }\r\n  }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
 								},
 								{
-									"name": "API-查询blog文档-根据id",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "http://localhost:8090/search/get/id/1",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "8090",
-											"path": [
-												"search",
-												"get",
-												"id",
-												"1"
-											]
+									"name": "API请求",
+									"item": [
+										{
+											"name": "range范围查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[\r\n    {\r\n        \"userId\": 1,\r\n        \"name\": \"Tony\",\r\n        \"programmingLanguages\": [\r\n            \"c++\",\r\n            \"java\",\r\n            \"php\"\r\n        ],\r\n        \"address\": \"China BJ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 4,\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 5,\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 3\r\n    }\r\n]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/search/range",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"search",
+														"range"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "fuzzy模糊查询",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "http://localhost:8090/search/fuzzy?name=李嘉欣&fuzziness=1&maxExpansions=50&prefixLength=2",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"search",
+														"fuzzy"
+													],
+													"query": [
+														{
+															"key": "name",
+															"value": "李嘉欣"
+														},
+														{
+															"key": "fuzziness",
+															"value": "1"
+														},
+														{
+															"key": "maxExpansions",
+															"value": "50"
+														},
+														{
+															"key": "prefixLength",
+															"value": "2"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "match.fuzzy模糊查询",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "http://localhost:8090/search/match/fuzzy?name=李嘉欣&fuzziness=1&maxExpansions=50&prefixLength=2",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"search",
+														"match",
+														"fuzzy"
+													],
+													"query": [
+														{
+															"key": "name",
+															"value": "李嘉欣"
+														},
+														{
+															"key": "fuzziness",
+															"value": "1"
+														},
+														{
+															"key": "maxExpansions",
+															"value": "50"
+														},
+														{
+															"key": "prefixLength",
+															"value": "2"
+														}
+													]
+												}
+											},
+											"response": []
 										}
-									},
-									"response": []
+									]
+								}
+							]
+						},
+						{
+							"name": "exists存在查询",
+							"item": [
+								{
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "1.创建user_term索引 - 带第三方分词器 Copy 2",
+											"request": {
+												"method": "PUT",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"address\": {\r\n                \"type\": \"text\",\r\n                \"analyzer\": \"ik_max_word\"\r\n            },\r\n            \"name\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"programming_languages\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"required_matches\": {\r\n                \"type\": \"integer\"\r\n            },\r\n            \"userId\": {\r\n                \"type\": \"long\"\r\n            }\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "批量操作之-批量插入create/index",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"index\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"userId\":1,\"name\":\"李嘉图\",\"programming_languages\":[],\"address\":\"China BJ\",\"required_matches\":\"1\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"userId\":2,\"name\":\"李嘉欣\",\"programming_languages\":[\"\"],\"address\":\"China SZ\",\"required_matches\":\"2\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"3\" } }\r\n{\"userId\":3,\"name\":\"王嘉欣\",\"programming_languages\":null,\"address\":\"China HZ\",\"required_matches\":\"3\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"4\" } }\r\n{\"userId\":4,\"name\":\"王嘉图\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China HZ\",\"required_matches\":\"3\"}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "存在查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "// {\r\n//     \"query\": {\r\n//         \"exists\": {\r\n//             \"field\": \"programming_languages\"\r\n//         }\r\n//     }\r\n// }\r\n\r\n{\r\n    \"query\": {\r\n        \"bool\": {\r\n            \"must\": {\r\n                \"exists\": {\r\n                    \"field\": \"programming_languages\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "API请求",
+									"item": [
+										{
+											"name": "exists存在查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "[\r\n    {\r\n        \"userId\": 1,\r\n        \"name\": \"Tony\",\r\n        \"programmingLanguages\": [\r\n            \"c++\",\r\n            \"java\",\r\n            \"php\"\r\n        ],\r\n        \"address\": \"China BJ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 4,\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 2\r\n    },\r\n    {\r\n        \"userId\": 5,\r\n        \"address\": \"China SZ\",\r\n        \"requiredMatches\": 3\r\n    }\r\n]",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/search/bool/exists?field=programming_languages",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"search",
+														"bool",
+														"exists"
+													],
+													"query": [
+														{
+															"key": "field",
+															"value": "programming_languages"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "from/size分页查询",
+							"item": [
+								{
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "批量操作之-批量插入create/index",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"index\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"userId\":1,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China BJ\",\"required_matches\":\"1\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"userId\":2,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China SZ\",\"required_matches\":\"2\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"3\" } }\r\n{\"userId\":3,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China HZ\",\"required_matches\":\"3\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"4\" } }\r\n{\"userId\":4,\"name\":\"Tom Wilson\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China SZ\",\"required_matches\":\"4\"}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "分页查询 - from/size",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t},\r\n    \"from\": 0,  // (页码-1) * size\r\n    \"size\": 4\r\n}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "结果字段过滤_source",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t},\r\n    \"from\": 0,  // (页码-1) * size\r\n    \"size\": 4,\r\n    \"_source\":[\"name\",\"address\"] // 结果仅显示这两个字段\r\n}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "根据userId降序",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"query\": {\r\n        \"match_all\": {}\r\n    },\r\n    \"from\": 2, // (页码-1) * size\r\n    \"size\": 2,\r\n    \"_source\":[\"name\",\"address\"], // 结果仅显示这两个字段\r\n    \"sort\": {                     // 先排序再分页\r\n        \"userId\": {\r\n            \"order\": \"desc\"\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "API请求",
+									"item": [
+										{
+											"name": "API-分页查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"includes\": [\r\n        \"name\",\r\n        \"address\"\r\n    ],\r\n    \"sort\": \"userId\",\r\n    \"size\": 2,\r\n    \"page\": 2,\r\n    \"order\": \"desc\"\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:8090/search/page",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"search",
+														"page"
+													]
+												}
+											},
+											"response": []
+										}
+									]
 								}
 							]
 						}
@@ -3090,102 +3878,6 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            // 有权重的\r\n            \"should\": [\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Jack\"\r\n                    }\r\n                },\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Tom\"\r\n                    }\r\n                }\r\n            ],\r\n            \"filter\": {\r\n                \"range\": {\r\n                    \"blogId\": {\r\n                        \"gt\": 7\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "查询blog文档 - 分页查询 - from/size",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t},\r\n    \"from\": 0,  // (页码-1) * size\r\n    \"size\": 4\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "查询blog文档 - 分页查询 - 结果字段过滤_source",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_all\":{\r\n\t\t}\r\n\t},\r\n    \"from\": 0,  // (页码-1) * size\r\n    \"size\": 4,\r\n    \"_source\":[\"blogId\",\"content\"] // 结果仅显示这两个字段\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "查询blog文档 - 分页查询 - 根据blogId降序",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"query\": {\r\n        \"match_all\": {}\r\n    },\r\n    \"from\": 0, // (页码-1) * size\r\n    \"size\": 4,\r\n    \"_source\":[\"blogId\",\"content\"],     // 结果仅显示这两个字段\r\n    \"sort\": {                           // 先排序再分页\r\n        \"blogId\": {\r\n            \"order\": \"desc\"\r\n        }\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3608,54 +4300,6 @@
 										"get",
 										"aggs",
 										"avg"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "删除文档-API请求",
-					"item": [
-						{
-							"name": "API-删除blog文档-根据文blogId",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/document/delete/blogId/2",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"document",
-										"delete",
-										"blogId",
-										"2"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-删除blog文档-删除所有文档",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/document/delete/all",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"document",
-										"delete",
-										"all"
 									]
 								}
 							},
