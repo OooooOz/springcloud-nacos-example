@@ -2998,6 +2998,38 @@
 												}
 											},
 											"response": []
+										},
+										{
+											"name": "ids查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"query\": {\r\n        \"ids\": {\r\n            \"values\" : [\"1\", \"4\", \"100\"]\r\n        }\r\n    }\r\n}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
 										}
 									]
 								},
@@ -3564,6 +3596,140 @@
 							]
 						},
 						{
+							"name": "wildcard通配符查询",
+							"item": [
+								{
+									"name": "HTTP请求",
+									"item": [
+										{
+											"name": "1.创建user_term索引 - 带第三方分词器 Copy 2",
+											"request": {
+												"method": "PUT",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"address\": {\r\n                \"type\": \"text\",\r\n                \"analyzer\": \"ik_max_word\"\r\n            },\r\n            \"name\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"programming_languages\": {\r\n                \"type\": \"keyword\"\r\n            },\r\n            \"required_matches\": {\r\n                \"type\": \"integer\"\r\n            },\r\n            \"userId\": {\r\n                \"type\": \"long\"\r\n            }\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "批量操作之-批量插入create/index",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \"index\" : {\"_index\" : \"user_term\",\"_id\" : \"1\" } }\r\n{\"userId\":1,\"name\":\"李嘉图\",\"programming_languages\":[],\"address\":\"China BJ\",\"required_matches\":\"1\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"2\" } }\r\n{\"userId\":2,\"name\":\"李嘉欣\",\"programming_languages\":[\"\"],\"address\":\"China SZ\",\"required_matches\":\"2\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"3\" } }\r\n{\"userId\":3,\"name\":\"王嘉欣\",\"programming_languages\":null,\"address\":\"China HZ\",\"required_matches\":\"3\"}\r\n{ \"create\" : {\"_index\" : \"user_term\",\"_id\" : \"4\" } }\r\n{\"userId\":4,\"name\":\"王嘉图\",\"programming_languages\":[\"c++\",\"java\",\"php\"],\"address\":\"China HZ\",\"required_matches\":\"3\"}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/_bulk",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"_bulk"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "wildcard通配符查询",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "// {\r\n//     \"query\": {\r\n//         \"exists\": {\r\n//             \"field\": \"programming_languages\"\r\n//         }\r\n//     }\r\n// }\r\n\r\n{\r\n    \"query\": {\r\n        \"bool\": {\r\n            \"must\": {\r\n                \"exists\": {\r\n                    \"field\": \"programming_languages\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:9200/user_term/_search",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "9200",
+													"path": [
+														"user_term",
+														"_search"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "API请求",
+									"item": [
+										{
+											"name": "exists存在查询",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "http://localhost:8090/search/bool/wildcard?field=name&value=李*",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "8090",
+													"path": [
+														"search",
+														"bool",
+														"wildcard"
+													],
+													"query": [
+														{
+															"key": "field",
+															"value": "name"
+														},
+														{
+															"key": "value",
+															"value": "李*"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						},
+						{
 							"name": "from/size分页查询",
 							"item": [
 								{
@@ -3737,573 +3903,864 @@
 					]
 				},
 				{
-					"name": "查询文档-请求",
+					"name": "文档操作之聚合操作",
 					"item": [
 						{
-							"name": "查询blog文档 - 条件查询-根据blogId查询",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match\":{\r\n            \"blogId\":2\r\n\t\t}\r\n\t}\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
+							"name": "数据准备",
+							"item": [
+								{
+									"name": "1.创建aggregation_entry索引",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"settings\": {\r\n        \"number_of_shards\": 3,\r\n        \"number_of_replicas\": 1\r\n    },\r\n    \"mappings\": {\r\n        \"properties\": {\r\n            \"age\": {\r\n                \"type\": \"integer\"\r\n            },\r\n            \"name\": {\r\n                \"type\": \"keyword\"\r\n            }\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/user_term",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"user_term"
+											]
 										}
-									}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
+								{
+									"name": "3.查看aggregation_entry索引所有映射",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/aggregation_entry/_mapping",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"aggregation_entry",
+												"_mapping"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "5.删除aggregation_entry索引",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/aggregation_entry",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"aggregation_entry"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "7.批量操作之-批量插入create/index",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{ \"index\" : {\"_index\" : \"aggregation_entry\",\"_id\" : \"1\" } }\r\n{\"id\":1,\"name\":\"Tom Wilson\",\"age\":18}\r\n{ \"create\" : {\"_index\" : \"aggregation_entry\",\"_id\" : \"2\" } }\r\n{\"id\":2,\"name\":\"Tom Wilson\",\"age\":18}\r\n{ \"create\" : {\"_index\" : \"aggregation_entry\",\"_id\" : \"3\" } }\r\n{\"id\":3,\"name\":\"Tom Wilson\",\"age\":20}\r\n{ \"create\" : {\"_index\" : \"aggregation_entry\",\"_id\" : \"4\" } }\r\n{\"id\":4,\"name\":\"Tom Wilson\",\"age\":25}\r\n{ \"create\" : {\"_index\" : \"aggregation_entry\",\"_id\" : \"5\" } }\r\n{\"id\":5,\"name\":\"Tom Wilson\",\"age\":20}\r\n{ \"create\" : {\"_index\" : \"aggregation_entry\",\"_id\" : \"6\" } }\r\n{\"id\":6,\"name\":\"Tom Wilson\"}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:9200/_bulk",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"_bulk"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "9.查询aggregation_entry所有文档",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:9200/aggregation_entry/_search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "9200",
+											"path": [
+												"aggregation_entry",
+												"_search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "API-创建索引",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8090/aggregation/index/create",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"aggregation",
+												"index",
+												"create"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "查询blog文档 - 条件查询 - 完全短语匹配match_phrase",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"query\":{\r\n\t\t\"match_phrase\":{\r\n            \"title\":\"Spring Data ElasticSearch学习教程1\"\r\n\t\t}\r\n\t}\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "查询blog文档 - bool组合条件查询-must",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            // 有权重的\r\n            \"must\": [\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Jack\"\r\n                    }\r\n                },\r\n                {\r\n                    \"match\": {\r\n                        \"title\": \"Spring Data ElasticSearch学习教程2\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "查询blog文档 - bool组合条件查询-should",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            // 有权重的\r\n            \"should\": [\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Jack\"\r\n                    }\r\n                },\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Tom\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "查询blog文档 - bool组合条件查询-range",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"query\": {\r\n        \"bool\": {\r\n            // 有权重的\r\n            \"should\": [\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Jack\"\r\n                    }\r\n                },\r\n                {\r\n                    \"match\": {\r\n                        \"author\": \"Tom\"\r\n                    }\r\n                }\r\n            ],\r\n            \"filter\": {\r\n                \"range\": {\r\n                    \"blogId\": {\r\n                        \"gt\": 7\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "查询blog文档 - 聚合查询 - term统计author",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"aggs\":{                                //聚合操作\r\n\t\t\"author_group\":{                    //名称，随意起名\r\n\t\t\t\"terms\":{                       //分组\r\n\t\t\t\t\"field\":\"author.keyword\"    //分组字段\r\n\t\t\t}\r\n\t\t}\r\n\t},\r\n    \"size\":0                                // 不显示source\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "查询blog文档 - 聚合查询 - avg平均status",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\t\"aggs\":{                                //聚合操作\r\n\t\t\"visits_avg\":{                    //名称，随意起名\r\n\t\t\t\"avg\":{                       //分组\r\n\t\t\t\t\"field\":\"visits\"        //分组字段\r\n\t\t\t}\r\n\t\t}\r\n\t},\r\n    \"size\":0                                // 不显示source\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:9200/blog/_search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9200",
-									"path": [
-										"blog",
-										"_search"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "查询文档-API请求",
-					"item": [
-						{
-							"name": "API-查询blog文档-条件查询-根据blogId",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/match/blogId/2",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"match",
-										"blogId",
-										"2"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档-条件查询-短语匹配match_phrase",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/match/phrase?title=学习教程1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"match",
-										"phrase"
-									],
-									"query": [
+							"name": "单值结果聚合",
+							"item": [
+								{
+									"name": "avg平均值",
+									"item": [
 										{
-											"key": "title",
-											"value": "学习教程1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档-bool组合条件查询-must",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/match/bool/must?author=Tony&title=学习",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"match",
-										"bool",
-										"must"
-									],
-									"query": [
-										{
-											"key": "author",
-											"value": "Tony"
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "avg平均值",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\":0,   // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"avg_age\": {\r\n            \"avg\": {\r\n                \"field\": \"age\",\r\n                \"missing\": 10  // 像文档6没有数据，设置该属性，字段没有数据时，用参数值10进行参与聚合；默认没有数据的文档不参与聚合\r\n            }\r\n        }\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
 										},
 										{
-											"key": "title",
-											"value": "学习"
+											"name": "API请求",
+											"item": [
+												{
+													"name": "avg平均值",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/avg",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"avg"
+															]
+														}
+													},
+													"response": []
+												}
+											]
 										}
 									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档-bool组合条件查询-should",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    \"Tony\",\r\n    \"Jack\"\r\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
 								},
-								"url": {
-									"raw": "http://localhost:8090/search/get/match/bool/should",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"match",
-										"bool",
-										"should"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档-bool组合条件查询-filter",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    \"Tony\",\r\n    \"Jack\"\r\n]",
-									"options": {
-										"raw": {
-											"language": "json"
+								{
+									"name": "weighted_avg加权平均值",
+									"item": [
+										{
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "weighted_avg加权平均值",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"weighted_avg_age\": {\r\n            \"weighted_avg\": {\r\n                \"value\": {\r\n                    \"field\": \"age\",\r\n                    \"missing\": 10\r\n                },\r\n                \"weight\": {\r\n                    \"field\": \"weight\",\r\n                    \"missing\": 1\r\n                }\r\n                // 结果：(18*1) +  (18*1) +  (20*1) +  (20*1) +  (25*1) +  (10*1) / (1+1+1+1+1+1)\r\n            }\r\n        }\r\n        //\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "API请求",
+											"item": [
+												{
+													"name": "weighted_avg加权平均值",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/weighted/avg",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"weighted",
+																"avg"
+															]
+														}
+													},
+													"response": []
+												}
+											]
 										}
-									}
+									]
 								},
-								"url": {
-									"raw": "http://localhost:8090/search/get/match/bool/filter/7",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"match",
-										"bool",
-										"filter",
-										"7"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档-bool组合条件查询-matchPhrase",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/match/phrase?author=Tony&title=学习",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"match",
-										"phrase"
-									],
-									"query": [
+								{
+									"name": "cardinality基数统计",
+									"item": [
 										{
-											"key": "author",
-											"value": "Tony"
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "cardinality基数统计",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"cardinality_age\": {\r\n            \"cardinality\": {\r\n                \"field\": \"age\",\r\n                \"precision_threshold\": 100  // 一个关于去重精度的阈值？允许0-4000，超过按4000\r\n                // 类似去重后统计\r\n            }\r\n        }\r\n        //\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
 										},
 										{
-											"key": "title",
-											"value": "学习"
+											"name": "API请求",
+											"item": [
+												{
+													"name": "cardinality基数统计",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/cardinality",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"cardinality"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "max最大值",
+									"item": [
+										{
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "max最大值",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"max_age\": {\r\n            \"max\": {\r\n                \"field\": \"age\",\r\n                \"missing\": 30  // 像文档6没有数据，设置该属性，字段没有数据时，用参数值30进行参与聚合；默认没有数据的文档不参与聚合\r\n            }\r\n        }\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "API请求",
+											"item": [
+												{
+													"name": "max最大值",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/max",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"max"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "min最小值",
+									"item": [
+										{
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "min最小值",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"min_age\": {\r\n            \"min\": {\r\n                \"field\": \"age\",\r\n                \"missing\": 5  // 像文档6没有数据，设置该属性，字段没有数据时，用参数值5进行参与聚合；默认没有数据的文档不参与聚合\r\n            }\r\n        }\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "API请求",
+											"item": [
+												{
+													"name": "min最小值",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/min",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"min"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "count总数",
+									"item": [
+										{
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "count总数",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"value_count_age\": {\r\n            \"value_count\": {\r\n                \"field\": \"age\",\r\n                \"missing\": 5  // 像文档6没有数据，设置该属性，字段没有数据时，用参数值5进行参与聚合；默认没有数据的文档不参与聚合\r\n            }\r\n        }\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "API请求",
+											"item": [
+												{
+													"name": "count总数",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/count",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"count"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "sum求和",
+									"item": [
+										{
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "sum求和",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"sum_age\": {\r\n            \"sum\": {\r\n                \"field\": \"age\",\r\n                \"missing\": 10  // 像文档6没有数据，设置该属性，字段没有数据时，用参数值10进行参与聚合；默认没有数据的文档不参与聚合\r\n            }\r\n        }\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "API请求",
+											"item": [
+												{
+													"name": "sum求和",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/sum",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"sum"
+															]
+														}
+													},
+													"response": []
+												}
+											]
 										}
 									]
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "API-查询blog文档-查询所有",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/match/all",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"match",
-										"all"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档-分页查询 - from/size",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/all/page?from=0&size=2",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"all",
-										"page"
-									],
-									"query": [
+							"name": "多值结果聚合",
+							"item": [
+								{
+									"name": "stats统计聚合-包含min, max, sum, count,avg",
+									"item": [
 										{
-											"key": "from",
-											"value": "0"
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "stats统计聚合-包含min, max, sum, count,avg",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\":0,   // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"stats_age\": {\r\n            \"stats\": {\r\n                \"field\": \"age\",\r\n                \"missing\": 10  // 像文档6没有数据，设置该属性，字段没有数据时，用参数值10进行参与聚合；默认没有数据的文档不参与聚合\r\n            }\r\n        }\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
 										},
 										{
-											"key": "size",
-											"value": "2"
+											"name": "API请求",
+											"item": [
+												{
+													"name": "avg平均值",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/avg",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"avg"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "weighted_avg加权平均值",
+									"item": [
+										{
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "weighted_avg加权平均值",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"weighted_avg_age\": {\r\n            \"weighted_avg\": {\r\n                \"value\": {\r\n                    \"field\": \"age\",\r\n                    \"missing\": 10\r\n                },\r\n                \"weight\": {\r\n                    \"field\": \"weight\",\r\n                    \"missing\": 1\r\n                }\r\n                // 结果：(18*1) +  (18*1) +  (20*1) +  (20*1) +  (25*1) +  (10*1) / (1+1+1+1+1+1)\r\n            }\r\n        }\r\n        //\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "API请求",
+											"item": [
+												{
+													"name": "weighted_avg加权平均值",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/weighted/avg",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"weighted",
+																"avg"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "cardinality基数统计",
+									"item": [
+										{
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "cardinality基数统计",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"cardinality_age\": {\r\n            \"cardinality\": {\r\n                \"field\": \"age\",\r\n                \"precision_threshold\": 100  // 一个关于去重精度的阈值？允许0-4000，超过按4000\r\n                // 类似去重后统计\r\n            }\r\n        }\r\n        //\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "API请求",
+											"item": [
+												{
+													"name": "cardinality基数统计",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/cardinality",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"cardinality"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "percentile",
+									"item": [
+										{
+											"name": "HTTP请求",
+											"item": [
+												{
+													"name": "sum求和",
+													"request": {
+														"method": "POST",
+														"header": [],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"size\": 0, // 让源数据hits不显示\r\n    \"aggs\": {\r\n        \"percentiles_age\": {\r\n            \"percentiles\": {\r\n                \"field\": \"age\",\r\n                \"missing\": 10  // 像文档6没有数据，设置该属性，字段没有数据时，用参数值10进行参与聚合；默认没有数据的文档不参与聚合\r\n            }\r\n        }\r\n    }\r\n}",
+															"options": {
+																"raw": {
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "http://localhost:9200/aggregation_entry/_search",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "9200",
+															"path": [
+																"aggregation_entry",
+																"_search"
+															]
+														}
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "API请求",
+											"item": [
+												{
+													"name": "sum求和",
+													"request": {
+														"method": "GET",
+														"header": [],
+														"url": {
+															"raw": "http://localhost:8090/aggregation/sum",
+															"protocol": "http",
+															"host": [
+																"localhost"
+															],
+															"port": "8090",
+															"path": [
+																"aggregation",
+																"sum"
+															]
+														}
+													},
+													"response": []
+												}
+											]
 										}
 									]
 								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档-分页查询 - 结果集过滤source",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/filter",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"filter"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档-分页查询 - 根据blogId降序",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/sort?sort=blogId&order=desc",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"sort"
-									],
-									"query": [
-										{
-											"key": "sort",
-											"value": "blogId"
-										},
-										{
-											"key": "order",
-											"value": "desc"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档- 聚合查询 - term统计author",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/aggs/count",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"aggs",
-										"count"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "API-查询blog文档- 聚合查询 - avg平均status",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8090/search/get/aggs/avg",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8090",
-									"path": [
-										"search",
-										"get",
-										"aggs",
-										"avg"
-									]
-								}
-							},
-							"response": []
+							]
 						}
 					]
 				}

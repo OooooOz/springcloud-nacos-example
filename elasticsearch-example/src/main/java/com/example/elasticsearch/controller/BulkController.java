@@ -247,4 +247,16 @@ public class BulkController {
         searchHits.stream().forEach(v -> userTerms.add(v.getContent()));
         return new PageImpl<>(userTerms, pageRequest, searchHits.getTotalHits());
     }
+
+
+    @GetMapping("search/bool/wildcard")
+    public Object matchWildcardSearchDocument(String field, String value) {
+
+//        ExistsQueryBuilder queryBuilder = QueryBuilders.wildcardQuery(field,value);
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.wildcardQuery(field, value));
+
+        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder().withQuery(queryBuilder).build();
+        return elasticsearchRestTemplate.search(nativeSearchQuery, UserTerm.class, IndexCoordinates.of("user_term"));
+    }
+
 }
