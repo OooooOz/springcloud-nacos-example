@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/sharding")
+@RequestMapping()
 public class ShardingController {
 
     @Autowired
     private CourseMapper courseMapper;
 
-    @GetMapping("/simple/test")
-    public String simpleTest() {
+    @GetMapping("/sharding/add")
+    public String add() {
         long min = 1;
         long max = Long.MAX_VALUE;
         long rangeLong = min + (((long) (new Random().nextDouble() * (max - min))));

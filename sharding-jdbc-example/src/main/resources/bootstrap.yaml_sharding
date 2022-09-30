@@ -17,7 +17,6 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://192.168.182.128:3308/test?characterEncoding=utf8&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
-        #url: ENC(xxxxx) # 内置加密,使用请查看详细文档
         username: root
         password: 123456
       m2:
@@ -29,24 +28,21 @@ spring:
 
     sharding:
       # 指定默认策略：指定数据库分片策略 约定user_id是偶数添加m1，是奇数添加m2
-      #      default-database-strategy:
-      #        inline:
-      #          sharding-column: user_id
-      #          algorithm-expression: m$->{user_id % 2 + 1}
+      #        default-database-strategy:
+      #          inline:
+      #            sharding-column: user_id
+      #            algorithm-expression: m$->{user_id % 2 + 1}
 
       tables:
         course:
           #course表的分库策略，约定user_id是偶数添加m1，是奇数添加m2
-          #          database-strategy:
-          #            inline:
-          #              sharding-column: user_id
-          #              algorithm-expression: m$->{user_id % 2 + 1}
+          database-strategy:
+            inline:
+              sharding-column: user_id
+              algorithm-expression: m$->{user_id % 2 + 1}
 
           #指定数据库里面表分布情况 m1  m2    course_1 course_2
-          #          actual-data-nodes: m$->{1..2}.course_$->{1..2}
-
-          # 指定使用只m1
-          actual-data-nodes: m1.course_$->{1..2}
+          actual-data-nodes: m$->{1..2}.course_$->{1..2}
           key-generator:
             # c_id 生成策略  SNOWFLAKE
             column: c_id
@@ -56,18 +52,6 @@ spring:
             inline:
               sharding-column: c_id
               algorithm-expression: course_$->{c_id % 2 + 1}
-
-        # 主从节点配置 - 读写分离
-        masterslave:
-          # 从库负载均衡算法，内置两个值：RANDOM、ROUND_ROBIN
-          load-balance-algorithm-type: round_robin
-          # 主从的名称，随意，但是要保证唯一
-          name: ms
-          # 指定主数据源
-          master-data-source-name: m1
-          # 指定从数据源
-          slave-data-source-names:
-            - m2
     props:
       sql:
         # 打开sql输出日志

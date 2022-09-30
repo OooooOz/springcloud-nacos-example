@@ -18,6 +18,8 @@
         <module>seata-order-example</module>
         <module>seata-integral-example</module>
         <module>webscoket-example</module>
+        <module>elasticsearch-example</module>
+        <module>sharding-jdbc-example</module>
     </modules>
 
     <properties>
@@ -28,6 +30,8 @@
         <mybatis-spring-boot-starter.version>2.2.0</mybatis-spring-boot-starter.version>
         <commons-lang3.version>3.11</commons-lang3.version>
         <fastJson.version>1.2.75</fastJson.version>
+        <guava.version>30.1.1-jre</guava.version>
+        <lombok.version>1.18.22</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -85,6 +89,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
@@ -99,6 +104,13 @@
             <artifactId>fastjson</artifactId>
             <version>${fastJson.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
 
     </dependencies>
 
