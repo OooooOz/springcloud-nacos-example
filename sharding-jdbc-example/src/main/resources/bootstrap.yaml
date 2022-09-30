@@ -10,6 +10,10 @@ spring:
 
     # 可以在nacos中配置：两个库进行分表
   shardingsphere:
+    props:
+      sql:
+        # 打开sql输出日志
+        show: true
     datasource:
       # 配置数据源，给数据源起名称
       names: m1,m2
@@ -68,23 +72,3 @@ spring:
           # 指定从数据源
           slave-data-source-names:
             - m2
-    props:
-      sql:
-        # 打开sql输出日志
-        show: true
-#  cloud:
-#    nacos:
-#      # 配置
-#      config:
-#        # Nacos地址
-#        server-addr: 127.0.0.1:8848
-#        namespace: dev  # 命名空间，填ID
-#        file-extension: yaml
-#      discovery:
-#        # Nacos地址
-#        server-addr: 127.0.0.1:8848
-#        namespace: dev  # 命名空间，填ID
-
-#mybatis:
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
