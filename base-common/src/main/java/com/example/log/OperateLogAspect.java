@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -41,14 +42,21 @@ public class OperateLogAspect {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
 
-        //请求入参
-        String postData = "";
-        try {
-            postData = IoUtil.read(request.getInputStream(), Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            log.error("##error found", e);
+        if (request.getMethod().equalsIgnoreCase(RequestMethod.GET.name())) {
+
+        } else if (request.getMethod().equalsIgnoreCase(RequestMethod.POST.name())) {
+            //请求入参
+            String postData = "";
+            try {
+                postData = IoUtil.read(request.getInputStream(), Charset.forName("UTF-8"));
+            } catch (IOException e) {
+                log.error("##error found", e);
+            }
+            System.out.println("postData = " + postData);
+        } else {
+
         }
-        System.out.println("postData = " + postData);
+
         //获取进入的类名
         String className = pjp.getSignature().getDeclaringTypeName();
         System.out.println("className = " + className);
@@ -61,7 +69,7 @@ public class OperateLogAspect {
         //获取方法上的注解
         OperateLog reqLog = methodSignature.getMethod().getAnnotation(OperateLog.class);
         System.out.println("reqLog = " + reqLog);
-        //请求方法中文名称
+        //请求方法用户名称
         String userName = SpelUtil.generateKeyBySpEL(reqLog.userName(), pjp);
         System.out.println("userName = " + userName);
         // 请求的方法参数值
