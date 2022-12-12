@@ -1,8 +1,8 @@
 package com.example.controller;
 
-import com.example.dto.BaseResponse;
 import com.example.dto.UserDTO1;
 import com.example.dto.ValidationList;
+import com.example.response.BaseResponse;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

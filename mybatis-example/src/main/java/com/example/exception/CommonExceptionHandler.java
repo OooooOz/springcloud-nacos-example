@@ -1,6 +1,6 @@
 package com.example.exception;
 
-import com.example.dto.BaseResponse;
+import com.example.response.BaseResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
