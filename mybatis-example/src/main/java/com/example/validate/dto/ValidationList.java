@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.validate.dto;
 
 import lombok.experimental.Delegate;
 

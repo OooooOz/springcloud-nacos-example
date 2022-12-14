@@ -1,4 +1,4 @@
-package com.example.exception;
+package com.example.validate.exception;
 
 import com.example.response.BaseResponse;
 import org.springframework.http.HttpStatus;

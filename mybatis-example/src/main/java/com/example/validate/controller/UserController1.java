@@ -1,9 +1,8 @@
-package com.example.controller;
+package com.example.validate.controller;
 
-import com.example.dto.UserDTO;
-import com.example.dto.ValidationList;
-import com.example.log.OperateLog;
 import com.example.response.BaseResponse;
+import com.example.validate.dto.UserDTO1;
+import com.example.validate.dto.ValidationList;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,26 +12,25 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@RequestMapping("/api/user")
+@RequestMapping("/api/user1")
 @RestController
 @Validated
-public class UserController {
+public class UserController1 {
 
     @PostMapping("/save")
-    @OperateLog(serviceId = "user", userName = "#userDTO.userName")
-    public BaseResponse saveUser(@RequestBody @Validated UserDTO userDTO) {
+    public BaseResponse saveUser(@RequestBody @Validated(UserDTO1.Save.class) UserDTO1 UserDTO1) {
         // 校验通过，才会执行业务逻辑处理
         return BaseResponse.SUCCESS();
     }
 
     @PostMapping("/update")
-    public BaseResponse updateUser(@RequestBody @Validated UserDTO userDTO) {
+    public BaseResponse updateUser(@RequestBody @Validated(UserDTO1.Update.class) UserDTO1 UserDTO1) {
         // 校验通过，才会执行业务逻辑处理
         return BaseResponse.SUCCESS();
     }
 
     @PostMapping("/save/list")
-    public BaseResponse saveUserList(@RequestBody @Validated List<UserDTO> userDTO) {
+    public BaseResponse saveUserList(@RequestBody @Validated(UserDTO1.Save.class) List<UserDTO1> UserDTO1) {
         // 校验通过，才会执行业务逻辑处理
         return BaseResponse.SUCCESS();
     }
@@ -44,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/save/list/validation")
-    public BaseResponse saveUsers(@RequestBody @Validated ValidationList<UserDTO> userDTO) {
+    public BaseResponse saveUsers(@RequestBody @Validated(UserDTO1.Save.class) ValidationList<UserDTO1> UserDTO1) {
         // 校验通过，才会执行业务逻辑处理
         return BaseResponse.SUCCESS();
     }
@@ -65,7 +63,6 @@ public class UserController {
 
     // 查询参数
     @GetMapping("getByAccount")
-    @OperateLog(serviceId = "user", userName = "#account")
     public BaseResponse getByAccount(@Length(min = 6, max = 20) @NotNull String account) {
         // 校验通过，才会执行业务逻辑处理
         return BaseResponse.SUCCESS();
