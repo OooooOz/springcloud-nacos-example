@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dynamic.entity.Course;
 import com.example.dynamic.mapper.CourseMapper;
 import com.example.dynamic.service.CourseService;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Random;
 
 /*
@@ -26,6 +30,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course>
     @Autowired
     private CourseMapper courseMapper;
 
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
+
     @Override
     @Transactional
     public void add(Course course) {
@@ -41,6 +48,28 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course>
         Course course = Course.builder().cName("java").cStatus("Normal1").userId(rangeLong).build();
         courseMapper.insert(course);
         int a = 1 / 0;
+    }
+
+    /*
+    在batch模式重复使用已经预处理的语句，并且批量执行所有更新语句，显然batch性能将更优；
+    但batch模式也有自己的问题，比如在Insert操作时，在事务没有提交之前，是没有办法获取到自增的id，这在某型情形下是不符合业务要求的
+    插入大量数据时，效率最高，通过重复使用预编译后的语句，不断填充数据，批量提交（数据量很大使用）
+*/
+    public void add(List<Course> itemList) {
+
+        // 新获取一个模式为BATCH，自动提交为false的session
+        // 如果自动提交设置为true,将无法控制提交的条数，改为最后统一提交，可能导致内存溢出
+        SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        CourseMapper mapper = session.getMapper(CourseMapper.class);
+        for (int i = 0; i < itemList.size(); i++) {
+            mapper.insert(itemList.get(i));
+            if (i % 1000 == 999) {//每1000条提交一次防止内存溢出
+                session.commit();
+                session.clearCache();
+            }
+        }
+        session.commit();
+        session.clearCache();
     }
 }
 

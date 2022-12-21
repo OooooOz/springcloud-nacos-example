@@ -1,0 +1,50 @@
+spring:
+  # 项目名称，默认情况下Nacos中配置需要和这个保持一致
+  application:
+    name: rocketmq-test
+
+  cloud:
+    nacos:
+      # 配置
+      config:
+        # Nacos地址
+        server-addr: 127.0.0.1:8848
+        namespace: dev  # 命名空间，填ID
+      # 发布服务时需要加上这个，不然Nacos无法监听到
+      discovery:
+        # Nacos地址
+        server-addr: 127.0.0.1:8848
+        namespace: dev  # 命名空间，填ID
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf8&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+
+#rocketmq配置信息
+rocketmq:
+  #nameservice服务器地址（多个以英文逗号隔开）
+  name-server: 192.168.182.128:9876
+  #生产者配置
+  producer:
+    #组名
+    group: rocketmq-test-provider-group
+    #目的地（topic:tag）
+    #topic
+    topic: rocketmq-test-topic
+    #    # 消息压缩阀值，当消息体的大小超过该阀值后，进行消息压缩。默认为 4 * 1024B
+    #    compress-message-body-threshold: 4096
+    #    # 消息体的最大允许大小。。默认为 4 * 1024 * 1024B
+    #    max-message-size: 4194304
+    #    # 同步发送消息时，失败重试次数。默认为 2 次。
+    #    retry-times-when-send-failed: 2
+    #    # 异步发送消息时，失败重试次数。默认为 2 次。
+    #    retry-times-when-send-async-failed: 2
+    #    # 发送消息给 Broker 时，如果发送失败，是否重试另外一台 Broker 。默认为 false
+    #    retry-next-server: false
+
+    # 发送消息超时时间 默认3秒
+    send-message-timeout: 3000
+server:
+  port: 8092
