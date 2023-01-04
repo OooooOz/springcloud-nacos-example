@@ -1,0 +1,2 @@
+com.example.spi.service.provider.DefaultPushServiceImpl
+com.example.spi.service.provider.BatchPushServiceImpl

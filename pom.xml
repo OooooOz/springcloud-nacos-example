@@ -22,6 +22,7 @@
         <module>sharding-jdbc-example</module>
         <module>mybatis-example</module>
         <module>base-common</module>
+        <module>spi-service-provider</module>
     </modules>
 
     <properties>
