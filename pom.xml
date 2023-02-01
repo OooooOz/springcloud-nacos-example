@@ -23,6 +23,7 @@
         <module>mybatis-example</module>
         <module>base-common</module>
         <module>spi-service-provider</module>
+        <module>java-base</module>
     </modules>
 
     <properties>
