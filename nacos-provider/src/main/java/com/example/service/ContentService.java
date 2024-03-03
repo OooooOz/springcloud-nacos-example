@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.domain.dto.ContentDTO;
 import com.example.domain.po.Content;
 import com.example.domain.vo.ContentVO;
 
@@ -14,7 +15,9 @@ public interface ContentService extends IService<Content> {
 
     void saveContentService();
 
-    List<ContentVO> findContentServicePage(ContentVO vo);
+    List<ContentVO> findContentServicePage(ContentDTO dto);
 
     void updateBatch(Integer type);
+
+    void updateOne(ContentDTO dto);
 }

@@ -3,6 +3,12 @@ spring:
   application:
     name: provider
 
+  mvc:
+    async:
+      request-timeout: PT5S
+    read-timeout: 5000
+    connect-timeout: 5000
+
   # mysql 属性配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -22,8 +28,19 @@ spring:
         # Nacos地址
         server-addr: 127.0.0.1:8848
         namespace: dev  # 命名空间，填ID
+
 server:
   port: 8080
+  tomcat:
+    threads:
+      max: 1000
+      min-spare: 10
+    max-http-form-post-size: -1 # 解除tomcat上传文件的大小限制，在Springmvc中进行控制
+    uri-encoding: utf-8
+
+  servlet:
+    session:
+      timeout: PT15M
 
 mybatis-plus:
   configuration:

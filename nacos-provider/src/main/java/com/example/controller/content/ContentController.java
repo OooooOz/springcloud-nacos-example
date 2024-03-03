@@ -1,5 +1,6 @@
 package com.example.controller.content;
 
+import com.example.domain.dto.ContentDTO;
 import com.example.domain.vo.ContentVO;
 import com.example.response.BaseResponse;
 import com.example.service.ContentService;
@@ -22,14 +23,20 @@ public class ContentController {
     }
 
     @PostMapping("/list/page")
-    public BaseResponse findContentServicePage(@RequestBody ContentVO vo) {
-        List<ContentVO> vos = contentService.findContentServicePage(vo);
+    public BaseResponse findContentServicePage(@RequestBody ContentDTO dto) {
+        List<ContentVO> vos = contentService.findContentServicePage(dto);
         return BaseResponse.SUCCESS(vos);
     }
 
     @GetMapping("/update/{type}")
     public BaseResponse updateBatch(@RequestParam("type") Integer type) {
         contentService.updateBatch(type);
+        return BaseResponse.SUCCESS();
+    }
+
+    @PutMapping("/update")
+    public BaseResponse updateOne(@RequestBody ContentDTO dto) {
+        contentService.updateOne(dto);
         return BaseResponse.SUCCESS();
     }
 
