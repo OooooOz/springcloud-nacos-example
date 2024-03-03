@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ContentMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.domain.po.Content">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="subTitle" column="sub_title" jdbcType="VARCHAR"/>
+        <result property="mainImg" column="main_img" jdbcType="VARCHAR"/>
+        <result property="detailImg" column="detail_img" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedBy" column="updated_by" jdbcType="VARCHAR"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,name,sub_title,
+        main_img,detail_img,created_by,
+        created_time,updated_by,updated_time
+    </sql>
+    <update id="updateBatchCaseWhen">
+        UPDATE t_content
+        <set>
+            <trim prefix="sub_title = CASE id" suffix="END,">
+                <foreach collection="list" item="param">
+                    <if test="param.id != null">
+                        WHEN #{param.id} THEN #{param.subTitle}
+                    </if>
+                </foreach>
+            </trim>
+            <!--            <trim prefix="main_img = CASE id" suffix="END,">
+                            <foreach collection="list" item="param">
+                                <if test="param.mainImg != null and param.mainImg != ''">
+                                    WHEN #{param.id} THEN #{param.mainImg}
+                                </if>
+                            </foreach>
+                        </trim>-->
+        </set>
+        <where>
+            id in
+            <foreach collection="list" item="param" separator="," open="(" close=")">
+                #{param.id}
+            </foreach>
+        </where>
+    </update>
+    <update id="updateForeach">
+        <foreach collection="list" item="param" separator=";">
+            UPDATE t_content
+            <set>
+                <if test=" param.subTitle != null and param.subTitle != ''">
+                    sub_title = #{param.subTitle}
+                </if>
+            </set>
+            WHERE id = #{param.id}
+        </foreach>
+    </update>
+</mapper>

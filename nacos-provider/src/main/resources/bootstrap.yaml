@@ -3,6 +3,13 @@ spring:
   application:
     name: provider
 
+  # mysql 属性配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cloud?allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+
   cloud:
     nacos:
       # 配置
@@ -17,3 +24,8 @@ spring:
         namespace: dev  # 命名空间，填ID
 server:
   port: 8080
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+
