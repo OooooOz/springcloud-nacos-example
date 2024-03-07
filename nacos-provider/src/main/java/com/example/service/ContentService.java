@@ -1,9 +1,9 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.domain.dto.ContentDTO;
-import com.example.domain.po.Content;
-import com.example.domain.vo.ContentVO;
+import com.example.model.dto.ContentDTO;
+import com.example.model.po.Content;
+import com.example.model.vo.ContentVO;
 
 import java.util.List;
 

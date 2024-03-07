@@ -1,6 +1,6 @@
-package com.example.nacosconsumer.controller;
+package com.example.controller;
 
-import com.example.nacosconsumer.service.RetryService;
+import com.example.service.RetryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,6 +1,14 @@
 spring:
   application:
     name: consumer
+
+  # mysql 属性配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cloud?allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+
   cloud:
     nacos:
       # 配置
@@ -36,11 +44,11 @@ provider:
     ConnectTimeout: 500 #请求连接超时时间ms
     ReadTimeout: 1000 #请求处理的超时时间ms
 server:
-  port: 8081
+  port: 8082
 
 feign:
   hystrix:
-    enabled: true
+    enabled: false
 #  sentinel熔断降级
 #  sentinel:
 #    enabled: true

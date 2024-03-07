@@ -1,7 +1,7 @@
-package com.example.nacosconsumer.service.impl;
+package com.example.service.impl;
 
-import com.example.nacosconsumer.client.ProviderClient;
-import com.example.nacosconsumer.service.RetryService;
+import com.example.client.ProviderClient;
+import com.example.service.RetryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;

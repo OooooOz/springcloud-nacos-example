@@ -16,3 +16,16 @@
 > https://blog.51cto.com/u_15077562/4194762
 > https://blog.csdn.net/qq_43631716/article/details/119747200
 > https://blog.51cto.com/09112012/5045979
+
+#### 3. 分支重命名
+> - git branch -m old new
+> - git push origin :old
+> - git push --set-upstream origin new
+
+#### 4. 下载的jar加载到本地mvn仓库
+> mvn install:install-file -Dfile=./xxx-1.0.0.jar -DgroupId=cn.xxx.xxx -DartifactId=xxx -Dversion=1.0.0 -Dpackaging=jar
+
+#### 5. excel的VLOOKUP方法
+> - =VLOOKUP(B2,SheetJS!A:F,3,0)
+> - 在SheetJS的A-F列查找本sheet的B2匹配的数据，取匹配的行数据的第三列数据
+

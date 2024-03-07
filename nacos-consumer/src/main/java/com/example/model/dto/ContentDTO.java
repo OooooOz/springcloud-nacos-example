@@ -1,8 +1,8 @@
-package com.example.domain.dto;
-
-import lombok.Data;
+package com.example.model.dto;
 
 import java.io.Serializable;
+
+import lombok.Data;
 
 /**
  * 内容服务配置 (TContent)实体类

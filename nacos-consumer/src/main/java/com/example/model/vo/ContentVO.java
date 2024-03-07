@@ -1,8 +1,8 @@
-package com.example.domain.vo;
-
-import lombok.Data;
+package com.example.model.vo;
 
 import java.io.Serializable;
+
+import lombok.Data;
 
 /**
  * 内容服务配置 (TContent)实体类

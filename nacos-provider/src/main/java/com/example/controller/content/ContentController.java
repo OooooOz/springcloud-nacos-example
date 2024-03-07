@@ -1,7 +1,7 @@
 package com.example.controller.content;
 
-import com.example.domain.dto.ContentDTO;
-import com.example.domain.vo.ContentVO;
+import com.example.model.dto.ContentDTO;
+import com.example.model.vo.ContentVO;
 import com.example.response.BaseResponse;
 import com.example.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;

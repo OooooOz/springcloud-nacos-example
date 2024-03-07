@@ -9,4 +9,4 @@ CREATE TABLE `t_content` (
  `updated_by` varchar(32) DEFAULT NULL COMMENT '更新人',
  `updated_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
  PRIMARY KEY (`id`)
-) ENGINE=InnoDBDEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='内容服务配置 ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='内容服务配置 ';

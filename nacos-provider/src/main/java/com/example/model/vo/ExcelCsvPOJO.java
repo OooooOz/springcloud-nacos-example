@@ -1,4 +1,4 @@
-package com.example.domain.vo;
+package com.example.model.vo;
 
 import com.alibaba.excel.annotation.write.style.HeadFontStyle;
 import com.alibaba.excel.annotation.write.style.HeadStyle;

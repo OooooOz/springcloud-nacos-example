@@ -1,8 +1,8 @@
 package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.domain.po.Content;
-import com.example.domain.vo.ContentVO;
+import com.example.model.po.Content;
+import com.example.model.vo.ContentVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

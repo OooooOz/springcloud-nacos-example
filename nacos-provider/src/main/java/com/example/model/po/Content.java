@@ -1,4 +1,4 @@
-package com.example.domain.po;
+package com.example.model.po;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;

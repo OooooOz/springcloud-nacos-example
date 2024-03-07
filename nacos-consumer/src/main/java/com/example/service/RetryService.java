@@ -1,6 +1,6 @@
-package com.example.nacosconsumer.service;
+package com.example.service;
 
 public interface RetryService {
-    
+
     String getValue();
 }
