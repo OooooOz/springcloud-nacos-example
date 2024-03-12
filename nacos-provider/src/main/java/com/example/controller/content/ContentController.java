@@ -1,13 +1,14 @@
 package com.example.controller.content;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.model.dto.ContentDTO;
 import com.example.model.vo.ContentVO;
 import com.example.response.BaseResponse;
 import com.example.service.ContentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("content")
@@ -17,8 +18,8 @@ public class ContentController {
     private ContentService contentService;
 
     @PostMapping("/save")
-    public BaseResponse saveContentService() {
-        contentService.saveContentService();
+    public BaseResponse saveContentService(Integer count) {
+        contentService.saveContentService(count);
         return BaseResponse.SUCCESS();
     }
 

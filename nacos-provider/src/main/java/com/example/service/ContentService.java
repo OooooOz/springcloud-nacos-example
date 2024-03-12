@@ -1,11 +1,11 @@
 package com.example.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.model.dto.ContentDTO;
 import com.example.model.po.Content;
 import com.example.model.vo.ContentVO;
-
-import java.util.List;
 
 /**
  * @description 针对表【t_content(内容服务配置 )】的数据库操作Service
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface ContentService extends IService<Content> {
 
-    void saveContentService();
+    void saveContentService(Integer count);
 
     List<ContentVO> findContentServicePage(ContentDTO dto);
 

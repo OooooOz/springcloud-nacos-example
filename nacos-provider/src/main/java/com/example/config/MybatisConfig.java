@@ -1,20 +1,23 @@
 package com.example.config;
 
+import org.apache.ibatis.logging.stdout.StdOutImpl;
+import org.apache.ibatis.session.ExecutorType;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import org.apache.ibatis.logging.stdout.StdOutImpl;
-import org.apache.ibatis.session.ExecutorType;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @Description: Mybatis配置类
  */
 @Configuration
+@MapperScan(basePackages = "com.example.mapper")
 public class MybatisConfig {
 
     // 当前环境
