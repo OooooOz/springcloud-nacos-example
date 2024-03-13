@@ -11,9 +11,8 @@ CREATE TABLE `t_content` (
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='内容服务配置 ';
 
-
 CREATE TABLE `t_user_account` (
-`id` bigint unsigned NOT NULL AUTO_INCREMENT,
+`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 `account` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '账户',
 `name` varchar(20) DEFAULT NULL COMMENT '客户名称',
 `mobile` varchar(20) DEFAULT NULL COMMENT '客户手机',
@@ -22,5 +21,6 @@ CREATE TABLE `t_user_account` (
 `created_time` datetime NOT NULL COMMENT '创建时间',
 `updated_by` varchar(32) DEFAULT NULL COMMENT '更新人',
 `updated_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-PRIMARY KEY (`id`)
+PRIMARY KEY (`id`),
+KEY `idx_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户账户表';

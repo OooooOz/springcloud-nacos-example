@@ -1,24 +1,22 @@
 package com.example.service.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.UserAccountMapper;
 import com.example.model.po.UserAccount;
 import com.example.service.UserAccountService;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-
-import cn.hutool.core.lang.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author c-zhongwh01
@@ -55,13 +53,13 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deadLock() {
+    public void deadLock(Integer no) {
         try {
-            UserAccount account = this.getById(1L);
-            BigDecimal decimal = account.getAmount().subtract(new BigDecimal("100"));
-            this.updateAmountById(account.getId(), decimal);
-            TimeUnit.SECONDS.sleep(5);
-
+            if (no == 1) {
+                this.deadLockOne();
+            } else if (no == 2) {
+                this.deadLockTwo();
+            }
         } catch (Exception e) {
             log.info("++++++++++++++异常");
             throw new RuntimeException(e);
@@ -69,22 +67,51 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
 
     }
 
+    private void deadLockTwo() throws InterruptedException {
+        UserAccount userAccount = lambdaQuery().eq(UserAccount::getId, 1L).last("for update").one();
+        TimeUnit.SECONDS.sleep(10);
+        if (userAccount != null) {
+            BigDecimal decimal2 = userAccount.getAmount().add(new BigDecimal("1000"));
+            this.updateAmountById(1L, decimal2);
+        }
+
+    }
+
+    private void deadLockOne() throws InterruptedException {
+        UserAccount account = this.getById(1L);
+        BigDecimal decimal = account.getAmount().subtract(new BigDecimal("100"));
+        this.updateAmountById(account.getId(), decimal);
+        TimeUnit.SECONDS.sleep(5);
+
+        UserAccount account2 = this.getById(2L);
+        BigDecimal decimal2 = account2.getAmount().add(new BigDecimal("100"));
+        this.updateAmountById(account2.getId(), decimal2);
+    }
+
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    public void mockOtherTransactional() {
+    public void mockOtherTransactional(Integer no) {
         try {
-            UserAccount account = this.getById(2L);
-            BigDecimal decimal = account.getAmount().subtract(new BigDecimal("300"));
-            this.updateAmountById(account.getId(), decimal);
-            TimeUnit.SECONDS.sleep(10);
-
-            UserAccount account2 = this.getById(1L);
-            BigDecimal decimal2 = account2.getAmount().add(new BigDecimal("300"));
-            this.updateAmountById(account2.getId(), decimal2);
+            if (no == 1) {
+                this.mockOtherTransactionalOne();
+            } else if (no == 2) {
+                lambdaUpdate().set(UserAccount::getAmount, new BigDecimal("500")).eq(UserAccount::getName, "name-0").update();
+            }
         } catch (Exception e) {
             log.info("-------------异常");
             throw new RuntimeException(e);
         }
+    }
+
+    private void mockOtherTransactionalOne() throws InterruptedException {
+        UserAccount account = this.getById(2L);
+        BigDecimal decimal = account.getAmount().subtract(new BigDecimal("300"));
+        this.updateAmountById(account.getId(), decimal);
+        TimeUnit.SECONDS.sleep(10);
+
+        UserAccount account2 = this.getById(1L);
+        BigDecimal decimal2 = account2.getAmount().add(new BigDecimal("300"));
+        this.updateAmountById(account2.getId(), decimal2);
     }
 
     private void updateAmountById(Long id, BigDecimal decimal) {

@@ -1,13 +1,12 @@
 package com.example.controller.content;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
+import com.example.response.BaseResponse;
+import com.example.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.response.BaseResponse;
-import com.example.service.UserAccountService;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("account")
@@ -23,14 +22,14 @@ public class UserAccountController {
     }
 
     @PutMapping("/dead/lock")
-    public BaseResponse deadLock() {
-        CompletableFuture.runAsync(() -> userAccountService.deadLock());
+    public BaseResponse deadLock(Integer no) {
+        CompletableFuture.runAsync(() -> userAccountService.deadLock(no));
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        userAccountService.mockOtherTransactional();
+        userAccountService.mockOtherTransactional(no);
         return BaseResponse.SUCCESS();
     }
 

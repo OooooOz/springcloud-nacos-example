@@ -12,9 +12,9 @@ public interface UserAccountService extends IService<UserAccount> {
 
     void saveUserAccount(Integer count);
 
-    void deadLock();
+    void deadLock(Integer no);
 
-    void mockOtherTransactional();
+    void mockOtherTransactional(Integer no);
 
     void deadLockSolutionOne();
 
