@@ -25,6 +25,11 @@ public class UserAccountController {
     @PutMapping("/dead/lock")
     public BaseResponse deadLock() {
         CompletableFuture.runAsync(() -> userAccountService.deadLock());
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         userAccountService.mockOtherTransactional();
         return BaseResponse.SUCCESS();
     }
@@ -44,6 +49,24 @@ public class UserAccountController {
         if (no == 1) {
             userAccountService.mockOtherTransactionalSolutionOne();
         }
+        return BaseResponse.SUCCESS();
+    }
+
+    @PutMapping("/time/out")
+    public BaseResponse timeOut(@RequestParam("no") Integer no) {
+        CompletableFuture.runAsync(() -> userAccountService.timeOut(no));
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        userAccountService.mockOtherTimeOutTransactional(no);
+        return BaseResponse.SUCCESS();
+    }
+
+    @PutMapping("/table/lock")
+    public BaseResponse tableLock() {
+        userAccountService.tableLock();
         return BaseResponse.SUCCESS();
     }
 

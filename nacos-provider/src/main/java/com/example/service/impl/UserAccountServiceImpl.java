@@ -62,9 +62,6 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
             this.updateAmountById(account.getId(), decimal);
             TimeUnit.SECONDS.sleep(5);
 
-            UserAccount account2 = this.getById(2L);
-            BigDecimal decimal2 = account2.getAmount().add(new BigDecimal("100"));
-            this.updateAmountById(account2.getId(), decimal2);
         } catch (Exception e) {
             log.info("++++++++++++++异常");
             throw new RuntimeException(e);
@@ -141,5 +138,69 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
             log.info("-------------异常");
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void timeOut(Integer no) {
+        try {
+            if (no == 1) {
+                this.timeOutOne();
+            } else if (no == 2) {
+                this.updateAmountById(3L, new BigDecimal("500"));
+                TimeUnit.SECONDS.sleep(60);
+            }
+        } catch (Exception e) {
+            log.info("-------------异常");
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void timeOutOne() throws InterruptedException {
+        UserAccount one = lambdaQuery().orderByDesc(UserAccount::getId).last("limit 1").one();
+        Long id;
+        if (one == null) {
+            id = 1L;
+        } else {
+            id = one.getId() + 1L;
+        }
+        this.updateAmountById(id, new BigDecimal("500"));
+        TimeUnit.SECONDS.sleep(60);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public void mockOtherTimeOutTransactional(Integer no) {
+        try {
+            if (no == 1) {
+                List<UserAccount> userAccounts = this.buildTestDate(1);
+                this.saveBatch(userAccounts);
+            } else if (no == 2) {
+                // 需要设置实体类 @TableId(value = "id", type = IdType.INPUT)
+                UserAccount userAccount = new UserAccount();
+                userAccount.setId(4L);
+                userAccount.setName("name-" + 4);
+                userAccount.setMobile(String.valueOf((12345678900L + 4L)));
+                userAccount.setAccount(UUID.randomUUID().toString(true));
+                userAccount.setAmount(new BigDecimal("1000"));
+                this.save(userAccount);
+            }
+        } catch (Exception e) {
+            log.info("-------------异常");
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 10)
+    public void tableLock() {
+        try {
+            lambdaUpdate().set(UserAccount::getAmount, new BigDecimal("1200")).eq(UserAccount::getName, "undefined").update();
+            TimeUnit.SECONDS.sleep(60);
+        } catch (Exception e) {
+            log.info("-------------异常");
+            throw new RuntimeException(e);
+        }
+
     }
 }

@@ -19,4 +19,10 @@ public interface UserAccountService extends IService<UserAccount> {
     void deadLockSolutionOne();
 
     void mockOtherTransactionalSolutionOne();
+
+    void timeOut(Integer no);
+
+    void mockOtherTimeOutTransactional(Integer no);
+
+    void tableLock();
 }
