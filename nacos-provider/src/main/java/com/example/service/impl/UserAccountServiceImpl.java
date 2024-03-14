@@ -1,22 +1,24 @@
 package com.example.service.impl;
 
-import cn.hutool.core.lang.UUID;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mapper.UserAccountMapper;
 import com.example.model.po.UserAccount;
 import com.example.service.UserAccountService;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import cn.hutool.core.lang.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author c-zhongwh01
@@ -58,21 +60,27 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
             if (no == 1) {
                 this.deadLockOne();
             } else if (no == 2) {
-                this.deadLockTwo();
+                this.deadLockTwo("name-2");
             }
         } catch (Exception e) {
             log.info("++++++++++++++异常");
             throw new RuntimeException(e);
         }
-
     }
 
-    private void deadLockTwo() throws InterruptedException {
-        UserAccount userAccount = lambdaQuery().eq(UserAccount::getId, 1L).last("for update").one();
-        TimeUnit.SECONDS.sleep(10);
+    private void deadLockTwo(String name) throws InterruptedException {
+        UserAccount userAccount = lambdaQuery().eq(UserAccount::getName, name).last("for update").one();
+        TimeUnit.SECONDS.sleep(5);
         if (userAccount != null) {
             BigDecimal decimal2 = userAccount.getAmount().add(new BigDecimal("1000"));
-            this.updateAmountById(1L, decimal2);
+            lambdaUpdate().eq(UserAccount::getName, name).set(UserAccount::getAmount, decimal2).update();
+        } else {
+            userAccount = new UserAccount();
+            userAccount.setName(name);
+            userAccount.setMobile(String.valueOf((12345678900L)));
+            userAccount.setAccount(UUID.randomUUID().toString(true));
+            userAccount.setAmount(new BigDecimal("1000"));
+            this.save(userAccount);
         }
 
     }
@@ -95,7 +103,7 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
             if (no == 1) {
                 this.mockOtherTransactionalOne();
             } else if (no == 2) {
-                lambdaUpdate().set(UserAccount::getAmount, new BigDecimal("500")).eq(UserAccount::getName, "name-0").update();
+                this.deadLockTwo("name-3");
             }
         } catch (Exception e) {
             log.info("-------------异常");
