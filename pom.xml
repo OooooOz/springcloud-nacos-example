@@ -22,6 +22,7 @@
         <module>mybatis-example</module>
         <module>base-common</module>
         <module>spi-service-provider</module>
+        <module>file-upload</module>
     </modules>
 
     <properties>

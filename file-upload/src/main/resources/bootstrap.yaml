@@ -1,0 +1,37 @@
+spring:
+  # 项目名称，默认情况下Nacos中配置需要和这个保持一致
+  application:
+    name: provider
+
+  # mysql 属性配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cloud?allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+
+  servlet:
+    multipart:
+      max-file-size: 10000Mb
+      max-request-size: 100000Mb
+
+server:
+  port: 9090
+  tomcat:
+    threads:
+      max: 1000
+      min-spare: 10
+    max-http-form-post-size: -1 # 解除tomcat上传文件的大小限制，在Springmvc中进行控制
+    uri-encoding: utf-8
+
+upload:
+  root:
+    dir: temp
+  window:
+    root: D:\\
+  chunkSize: 2
+  thread:
+    maxSize: 25
+  queue:
+    maxSize: 100
+    dir: D:\\temp\\queue
