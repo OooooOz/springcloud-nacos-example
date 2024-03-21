@@ -1,14 +1,5 @@
 package com.example.pdf;
 
-import com.example.pdf.vo.RenovationDocNameEnum;
-import com.google.common.collect.Lists;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -16,6 +7,17 @@ import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.example.pdf.vo.RenovationDocNameEnum;
+import com.google.common.collect.Lists;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+
+import cn.hutool.core.io.IoUtil;
 
 /**
  * @Description
@@ -309,7 +311,7 @@ public class PdfUtil {
                 zipInputStream.closeEntry();
             }
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            IoUtil.close(inputStream);
         }
     }
 

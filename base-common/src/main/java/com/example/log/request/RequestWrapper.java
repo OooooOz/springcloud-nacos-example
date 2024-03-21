@@ -1,15 +1,16 @@
 package com.example.log.request;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+
+import cn.hutool.core.io.IoUtil;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @version v1.0
@@ -30,11 +31,11 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         InputStream inputStream = null;
         try {
             inputStream = request.getInputStream();
-            bytes = IOUtils.toByteArray(inputStream);
+            bytes = IoUtil.readBytes(inputStream);
         } catch (IOException e) {
             log.error("requestWrapper error", e);
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            IoUtil.close(inputStream);
         }
         body = bytes;
     }
