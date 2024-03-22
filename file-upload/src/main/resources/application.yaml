@@ -42,3 +42,7 @@ upload:
   window:
     root: D:\\
   chunkSize: 2
+
+jasypt:
+  encryptor:
+    password: 2Z5zjMEu7o1smsVL
