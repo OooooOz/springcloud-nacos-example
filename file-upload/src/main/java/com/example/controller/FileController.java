@@ -10,10 +10,7 @@ import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StopWatch;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.model.dto.FileDownloadRequest;
 import com.example.model.dto.FileUploadRequest;
@@ -27,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping(value = "/file")
 @Slf4j
+@CrossOrigin
 public class FileController {
 
     @Autowired
@@ -38,7 +36,7 @@ public class FileController {
     @Autowired
     private HttpServletResponse response;
 
-    @PostMapping(value = "/upload")
+    @PostMapping(value = "/upload/big")
     @ResponseBody
     public BaseResponse<FileUpload> upload(FileUploadRequest fileUploadRequestDTO) throws IOException {
 
