@@ -12,12 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.model.BaseResponse;
 import com.example.model.dto.FileDownloadRequest;
 import com.example.model.dto.FileUploadRequest;
 import com.example.model.vo.FileUpload;
-import com.example.response.BaseResponse;
 import com.example.service.FileService;
-import com.example.util.FileUtil;
+import com.example.util.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,7 +75,7 @@ public class FileController {
     public void download(FileDownloadRequest requestDTO) {
 
         try {
-            FileUtil.downloadFile(requestDTO.getName(), requestDTO.getPath(), request, response);
+            FileUtils.downloadFile(requestDTO.getName(), requestDTO.getPath(), request, response);
         } catch (FileNotFoundException e) {
             log.error("download error:" + e.getMessage(), e);
             throw new RuntimeException("文件下载失败");

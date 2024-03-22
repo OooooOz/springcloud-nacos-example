@@ -1,6 +1,7 @@
 package com.example.validate.exception;
 
-import com.example.response.BaseResponse;
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolationException;
+import com.example.model.BaseResponse;
 
 @RestControllerAdvice
 public class CommonExceptionHandler {

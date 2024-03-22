@@ -1,10 +1,10 @@
-package com.example.response;
+package com.example.model;
+
+import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.io.Serializable;
 
 /**
  * 返回基类

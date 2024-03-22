@@ -1,17 +1,19 @@
 package com.example.validate.controller;
 
-import com.example.log.OperateLog;
-import com.example.response.BaseResponse;
-import com.example.validate.dto.UserDTO;
-import com.example.validate.dto.ValidationList;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.log.OperateLog;
+import com.example.model.BaseResponse;
+import com.example.validate.dto.UserDTO;
+import com.example.validate.dto.ValidationList;
 
 @RequestMapping("/api/user")
 @RestController

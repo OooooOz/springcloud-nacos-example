@@ -1,11 +1,13 @@
 package com.example.log.request;
 
-import org.springframework.stereotype.Component;
+import java.io.IOException;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 /**
  * @description CacheHttpServletRequestFilter
@@ -33,7 +35,14 @@ public class CacheHttpServletRequestFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         ServletRequest request = null;
         if (servletRequest instanceof HttpServletRequest) {
-            request = new RequestWrapper((HttpServletRequest) servletRequest);
+            HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+            String contentType = httpServletRequest.getContentType();
+            // 上传功能兼容处理
+            if (contentType != null && contentType.contains("multipart/form-data")) {
+                request = new StandardServletMultipartResolver().resolveMultipart(httpServletRequest);
+            } else {
+                request = new RequestWrapper((HttpServletRequest)servletRequest);
+            }
         }
         if (request != null) {
             filterChain.doFilter(request, servletResponse);

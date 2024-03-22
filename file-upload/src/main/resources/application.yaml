@@ -10,10 +10,16 @@ spring:
     username: root
     password: 123456
 
+  redis:
+    host: 10.0.73.94
+    port: 6379
+    password: ENC(VhAJJwXY86SEI+b0tY5eJxhZTDsTLpBv1OT5lmFsuSfy4UuPvV06npnGbdkqYjgp)
+    database: 15
+
   servlet:
     multipart:
-      max-file-size: 10000
-      max-request-size: 100000
+      max-file-size: 1GB
+      max-request-size: 1GB
 
 server:
   port: 9090
@@ -25,13 +31,14 @@ server:
     uri-encoding: utf-8
 
 upload:
+  mode: RANDOM_ACCESS
+  executor:
+    thread-max-size: 6
+    queue-max-size: 20
+  block:
+    queue-size: 50
   root:
     dir: temp
   window:
     root: D:\\
   chunkSize: 2
-  thread:
-    maxSize: 25
-  queue:
-    maxSize: 100
-    dir: D:\\temp\\queue

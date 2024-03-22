@@ -1,12 +1,13 @@
 package com.example.controller.content;
 
-import com.example.response.BaseResponse;
-import com.example.service.UserAccountService;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import com.example.model.BaseResponse;
+import com.example.service.UserAccountService;
 
 @RestController
 @RequestMapping("account")

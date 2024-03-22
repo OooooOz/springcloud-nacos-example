@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.model.BaseResponse;
 import com.example.model.dto.ContentDTO;
 import com.example.model.vo.ContentVO;
-import com.example.response.BaseResponse;
 import com.example.service.ContentService;
 
 @RestController

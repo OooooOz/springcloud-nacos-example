@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class FileUtil {
+public class FileUtils {
 
     public static final String PATH_HEAD = "/vagrant/";
     public static final String USER_HEAD = "/data/User";
@@ -112,4 +112,23 @@ public class FileUtil {
         return path;
     }
 
+    /**
+     * 获取扩展名
+     */
+    public static String getExtension(String fileName) {
+
+        if (StringUtils.INDEX_NOT_FOUND == StringUtils.indexOf(fileName, DOT)) {
+            return StringUtils.EMPTY;
+        }
+        String ext = StringUtils.substring(fileName, StringUtils.lastIndexOf(fileName, DOT) + 1);
+        return StringUtils.trimToEmpty(ext);
+    }
+
+    public static String checkPath(String path) {
+        File pdfFolder = new File(path);
+        if (!pdfFolder.exists()) {
+            pdfFolder.mkdirs();
+        }
+        return path;
+    }
 }
