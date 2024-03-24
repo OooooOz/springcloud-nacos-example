@@ -1,13 +1,7 @@
 package com.example.service.strategy;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import com.example.contant.FileConstant;
 import com.example.model.dto.FileUploadRequest;
 import com.example.model.vo.FileUpload;
@@ -15,11 +9,14 @@ import com.example.service.helper.FilePathHelper;
 import com.example.util.FileMD5Util;
 import com.example.util.FileUtils;
 import com.example.util.RedisUtil;
-import com.example.utils.DateUtils;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public abstract class SliceUploadTemplate implements SliceUploadStrategy {
@@ -43,73 +40,43 @@ public abstract class SliceUploadTemplate implements SliceUploadStrategy {
 
     @Override
     public FileUpload sliceUpload(FileUploadRequest param) {
-
-        boolean isOk = this.upload(param);
-        if (isOk) {
-            File tmpFile = this.createTmpFile(param);
-            FileUpload fileUploadDTO = this.saveAndFileUploadDTO(param.getFile().getOriginalFilename(), tmpFile);
-            return fileUploadDTO;
-        }
-        String md5 = FileMD5Util.getFileMD5(param.getFile());
-
         Map<Integer, String> map = new HashMap<>();
+        String md5 = FileMD5Util.getFileMD5(param.getFile());
+        param.setMd5(md5);
         map.put(param.getChunk(), md5);
-        return FileUpload.builder().chunkMd5Info(map).build();
+
+        String filename = param.getFile().getOriginalFilename();
+        FileUpload fileUpload = new FileUpload();
+        fileUpload.setChunkMd5Info(map);
+        fileUpload.setFileName(filename);
+        if (this.upload(param)) {
+            this.afterUpload(filename, param.getTempFile(), fileUpload);
+        }
+
+        return fileUpload;
     }
 
     /**
      * 保存文件操作
      */
-    public FileUpload saveAndFileUploadDTO(String fileName, File tmpFile) {
-
-        FileUpload fileUploadDTO = null;
-
+    public void afterUpload(String fileName, File tmpFile, FileUpload fileUpload) {
         try {
+            // 检查要重命名的文件是否存在，是否是文件
+            if (!tmpFile.exists() || tmpFile.isDirectory()) {
+                log.info("File does not exist: {}", tmpFile.getName());
+                fileUpload.setUploadComplete(Boolean.FALSE);
+            }
 
-            fileUploadDTO = renameFile(tmpFile, fileName);
-            if (fileUploadDTO.isUploadComplete()) {
-                System.out.println("upload complete !!" + fileUploadDTO.isUploadComplete() + " name=" + fileName);
+            fileUpload.setUploadComplete(Boolean.TRUE);
+            if (fileUpload.isUploadComplete()) {
+                System.out.println("upload complete !!" + fileUpload.isUploadComplete() + " name=" + fileName);
                 // TODO 保存文件信息到数据库
 
             }
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-        } finally {
-
         }
-        return fileUploadDTO;
-    }
-
-    /**
-     * 文件重命名
-     *
-     * @param toBeRenamed 将要修改名字的文件
-     * @param toFileNewName 新的名字
-     */
-    private FileUpload renameFile(File toBeRenamed, String toFileNewName) {
-        // 检查要重命名的文件是否存在，是否是文件
-        FileUpload fileUploadDTO = new FileUpload();
-        if (!toBeRenamed.exists() || toBeRenamed.isDirectory()) {
-            log.info("File does not exist: {}", toBeRenamed.getName());
-            fileUploadDTO.setUploadComplete(false);
-            return fileUploadDTO;
-        }
-        String ext = FileUtils.getExtension(toFileNewName);
-        String p = toBeRenamed.getParent();
-        String filePath = p + FileConstant.FILE_SEPARATORCHAR + toFileNewName;
-        File newFile = new File(filePath);
-        // 修改文件名
-        boolean uploadFlag = toBeRenamed.renameTo(newFile);
-
-        fileUploadDTO.setMtime(DateUtils.getCurrentTimeStamp());
-        fileUploadDTO.setUploadComplete(uploadFlag);
-        fileUploadDTO.setPath(filePath);
-        fileUploadDTO.setSize(newFile.length());
-        fileUploadDTO.setFileExt(ext);
-        fileUploadDTO.setFileId(toFileNewName);
-
-        return fileUploadDTO;
     }
 
     /**

@@ -1,21 +1,17 @@
 package com.example.config;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Slf4j
 @Configuration
 public class UploadExecutorConfig {
-
-    @Value("${upload.executor.thread-max-size}")
-    private Integer maxPoolSize;
 
     @Value("${upload.executor.queue-max-size}")
     private Integer maxQueueSize;
@@ -26,7 +22,7 @@ public class UploadExecutorConfig {
      * @return
      */
     @Bean(name = "fileUploadExecutor")
-    public Executor CreateAttachmentExecutor() {
+    public Executor fileUploadExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 此方法返回可用处理器的虚拟机的最大数量; 不小于1
         int core = Runtime.getRuntime().availableProcessors();
@@ -35,9 +31,6 @@ public class UploadExecutorConfig {
         executor.setCorePoolSize(core);
         // 线程池最大线程数
         executor.setMaxPoolSize(core * 2 + 1);
-        if (maxPoolSize != null) {
-            executor.setMaxPoolSize(maxPoolSize);
-        }
         // 最大等待任务数 如果传入值大于0，底层队列使用的是LinkedBlockingQueue,否则默认使用SynchronousQueue
         executor.setQueueCapacity(10);
         if (maxQueueSize != null) {
@@ -52,5 +45,4 @@ public class UploadExecutorConfig {
         executor.initialize();
         return executor;
     }
-
 }

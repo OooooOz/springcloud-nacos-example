@@ -1,18 +1,15 @@
 package com.example.util;
 
-import java.io.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.example.contant.FileConstant;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.example.contant.FileConstant;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 
 @Slf4j
 @Component
@@ -110,18 +107,6 @@ public class FileUtils {
             return StringUtils.substring(path, 0, end);
         }
         return path;
-    }
-
-    /**
-     * 获取扩展名
-     */
-    public static String getExtension(String fileName) {
-
-        if (StringUtils.INDEX_NOT_FOUND == StringUtils.indexOf(fileName, DOT)) {
-            return StringUtils.EMPTY;
-        }
-        String ext = StringUtils.substring(fileName, StringUtils.lastIndexOf(fileName, DOT) + 1);
-        return StringUtils.trimToEmpty(ext);
     }
 
     public static String checkPath(String path) {

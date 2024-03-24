@@ -11,9 +11,10 @@ spring:
     password: 123456
 
   redis:
-    host: 10.0.73.94
+    host: localhost
     port: 6379
-    password: ENC(VhAJJwXY86SEI+b0tY5eJxhZTDsTLpBv1OT5lmFsuSfy4UuPvV06npnGbdkqYjgp)
+    #    password: ENC(VhAJJwXY86SEI+b0tY5eJxhZTDsTLpBv1OT5lmFsuSfy4UuPvV06npnGbdkqYjgp)
+    password: 123456
     database: 15
 
   servlet:
@@ -33,7 +34,6 @@ server:
 upload:
   mode: RANDOM_ACCESS
   executor:
-    thread-max-size: 6
     queue-max-size: 20
   block:
     queue-size: 50
@@ -43,6 +43,6 @@ upload:
     root: D:\\
   chunkSize: 2
 
-jasypt:
-  encryptor:
-    password: 2Z5zjMEu7o1smsVL
+#jasypt:
+#  encryptor:
+#    password: 2Z5zjMEu7o1smsVL

@@ -1,12 +1,13 @@
 package com.example.model.dto;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @Data
 @AllArgsConstructor
@@ -33,4 +34,6 @@ public class FileUploadRequest {
 
     //当前分片大小
     private Long size = 0L;
+
+    private File tempFile;
 }
