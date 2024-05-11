@@ -37,7 +37,7 @@ public abstract class SliceUploadTemplate implements SliceUploadStrategy {
         String path = filePathHelper.getPath(param);
         FileUtils.checkPath(path);
 
-        String fileName = param.getFile().getOriginalFilename();
+        String fileName = param.getName();
         return new File(path, fileName);
     }
 
@@ -116,7 +116,7 @@ public abstract class SliceUploadTemplate implements SliceUploadStrategy {
      * 检查并修改文件上传进度
      */
     public boolean checkAndSetUploadProgress(FileUploadRequest param, String uploadDirPath) {
-        String fileName = param.getFile().getOriginalFilename();
+        String fileName = param.getName();
         File confFile = new File(uploadDirPath, FileUtil.mainName(fileName) + ".conf");
         byte isComplete = 0;
         RandomAccessFile accessConfFile = null;
