@@ -1,17 +1,15 @@
 package com.example.service.strategy;
 
+import cn.hutool.core.io.IoUtil;
+import com.example.model.dto.FileUploadRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Objects;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import com.example.model.dto.FileUploadRequest;
-
-import cn.hutool.core.io.IoUtil;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component("RANDOM_ACCESS")
@@ -35,6 +33,7 @@ public class RandomAccessUploadStrategy extends SliceUploadTemplate {
             // 写入该分片数据
             accessTmpFile.write(param.getFile().getBytes());
             boolean isOk = super.checkAndSetUploadProgress(param, path);
+            param.setTempFile(tmpFile);
             return isOk;
         } catch (IOException e) {
             log.error(e.getMessage(), e);

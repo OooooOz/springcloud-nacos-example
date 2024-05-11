@@ -1,19 +1,6 @@
 package com.example.service.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
+import cn.hutool.core.io.IoUtil;
 import com.example.contant.FileConstant;
 import com.example.model.dto.FileUploadRequest;
 import com.example.model.vo.FileUpload;
@@ -26,10 +13,19 @@ import com.example.task.FileCallable;
 import com.example.util.FileMD5Util;
 import com.example.util.FileUtils;
 import com.example.util.RedisUtil;
-import com.example.utils.DateUtils;
-
-import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
 @Service
 @Slf4j
@@ -77,7 +73,7 @@ public class FileServiceImpl implements FileService {
 
         redisUtil.hset(FileConstant.FILE_UPLOAD_STATUS, md5, "true");
 
-        return FileUpload.builder().path(path).mtime(DateUtils.getCurrentTimeStamp()).uploadComplete(true).build();
+        return FileUpload.builder().uploadComplete(true).build();
     }
 
     @Override

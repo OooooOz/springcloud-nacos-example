@@ -34,7 +34,6 @@ server:
 upload:
   mode: RANDOM_ACCESS
   executor:
-    thread-max-size: 6
     queue-max-size: 20
   block:
     queue-size: 50
@@ -44,6 +43,6 @@ upload:
     root: D:\\
   chunkSize: 2
 
-jasypt:
-  encryptor:
-    password: 2Z5zjMEu7o1smsVL
+#jasypt:
+#  encryptor:
+#    password: 2Z5zjMEu7o1smsVL
