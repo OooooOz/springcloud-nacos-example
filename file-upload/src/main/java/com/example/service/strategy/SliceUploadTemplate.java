@@ -47,7 +47,7 @@ public abstract class SliceUploadTemplate implements SliceUploadStrategy {
         boolean isOk = this.upload(param);
         if (isOk) {
             File tmpFile = this.createTmpFile(param);
-            FileUpload fileUploadDTO = this.saveAndFileUploadDTO(param.getFile().getOriginalFilename(), tmpFile);
+            FileUpload fileUploadDTO = this.saveAndFileUploadDTO(param.getName(), tmpFile);
             return fileUploadDTO;
         }
         String md5 = FileMD5Util.getFileMD5(param.getFile());
