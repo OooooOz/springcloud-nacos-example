@@ -2,24 +2,23 @@ package com.example.task;
 
 import java.util.concurrent.Callable;
 
-import com.example.model.dto.FileUploadRequest;
-import com.example.model.vo.FileUpload;
+import com.example.model.dto.FileUploadDTO;
+import com.example.model.vo.FileUploadVo;
 import com.example.service.strategy.SliceUploadStrategy;
 
-public class FileCallable implements Callable<FileUpload> {
+public class FileCallable implements Callable<FileUploadVo> {
 
     private SliceUploadStrategy strategy;
 
-    private FileUploadRequest param;
+    private FileUploadDTO param;
 
-    public FileCallable(SliceUploadStrategy strategy, FileUploadRequest param) {
-
+    public FileCallable(SliceUploadStrategy strategy, FileUploadDTO param) {
         this.strategy = strategy;
         this.param = param;
     }
 
     @Override
-    public FileUpload call() {
+    public FileUploadVo call() {
         return strategy.sliceUpload(param);
     }
 }

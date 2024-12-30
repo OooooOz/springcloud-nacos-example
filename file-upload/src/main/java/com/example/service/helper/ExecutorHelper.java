@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.example.model.vo.FileUpload;
+import com.example.model.vo.FileUploadVo;
 
 @Component
 public class ExecutorHelper {
@@ -16,7 +16,7 @@ public class ExecutorHelper {
     @Value("${upload.block.queue-size}")
     private Integer blockQueueSize;
 
-    public CompletionService<FileUpload> getFileUploadCompletionService(Executor fileUploadExecutor) {
+    public CompletionService<FileUploadVo> getFileUploadCompletionService(Executor fileUploadExecutor) {
         return new ExecutorCompletionService<>(fileUploadExecutor, new LinkedBlockingDeque<>(blockQueueSize));
     }
 

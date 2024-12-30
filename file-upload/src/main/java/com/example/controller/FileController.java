@@ -8,23 +8,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StopWatch;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.model.BaseResponse;
 import com.example.model.dto.FileDownloadRequest;
-import com.example.model.dto.FileUploadRequest;
-import com.example.model.vo.FileUpload;
+import com.example.model.dto.FileUploadDTO;
+import com.example.model.dto.FileUploadParamDTO;
+import com.example.model.vo.FileUploadVo;
 import com.example.service.FileService;
 import com.example.util.FileUtils;
 
+import cn.hutool.core.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
-@RequestMapping(value = "/file")
 @Slf4j
 @CrossOrigin
+@RestController
+@RequestMapping(value = "/file")
 public class FileController {
 
     @Autowired
@@ -37,43 +41,39 @@ public class FileController {
     private HttpServletResponse response;
 
     @PostMapping(value = "/upload/big")
-    @ResponseBody
-    public BaseResponse<FileUpload> upload(FileUploadRequest fileUploadRequestDTO) throws IOException {
+    public BaseResponse<FileUploadVo> upload(FileUploadParamDTO fileUploadParamDTO) throws IOException {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("upload");
 
+        BaseResponse<FileUploadVo> res;
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-        FileUpload fileUploadDTO = null;
         if (isMultipart) {
-
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start("upload");
-            if (fileUploadRequestDTO.getChunk() != null && fileUploadRequestDTO.getChunks() > 0) {
-                fileUploadDTO = fileService.sliceUpload(fileUploadRequestDTO);
+            FileUploadVo fileUploadVo;
+            FileUploadDTO dto = BeanUtil.copyProperties(fileUploadParamDTO, FileUploadDTO.class);
+            if (dto.getChunk() != null && dto.getChunks() > 0) {
+                fileUploadVo = fileService.sliceUpload(dto);
             } else {
-                fileUploadDTO = fileService.upload(fileUploadRequestDTO);
+                fileUploadVo = fileService.upload(dto);
             }
-            stopWatch.stop();
-            log.info("{}", stopWatch.prettyPrint());
-
-            return BaseResponse.SUCCESS(fileUploadDTO);
+            res = BaseResponse.SUCCESS(fileUploadVo);
+        } else {
+            res = BaseResponse.FAILURE("非文件上传，请求失败");
         }
 
-        throw new RuntimeException("上传失败");
-
+        stopWatch.stop();
+        log.info("文件上传结束：{}", stopWatch.prettyPrint());
+        return res;
     }
 
-    @RequestMapping(value = "checkFileMd5", method = RequestMethod.POST)
-    @ResponseBody
-    public BaseResponse<FileUpload> checkFileMd5(String md5, String path) throws IOException {
-
-        FileUploadRequest param = new FileUploadRequest().setPath(path).setMd5(md5);
-        FileUpload fileUploadDTO = fileService.checkFileMd5(param);
-
-        return BaseResponse.SUCCESS(fileUploadDTO);
+    @PostMapping(value = "checkFileMd5")
+    public BaseResponse<FileUploadVo> checkFileMd5(String md5, String path) throws IOException {
+        FileUploadDTO param = new FileUploadDTO().setPath(path).setMd5(md5);
+        FileUploadVo fileUploadVo = fileService.checkFileMd5(param);
+        return BaseResponse.SUCCESS(fileUploadVo);
     }
 
     @PostMapping("/download")
     public void download(FileDownloadRequest requestDTO) {
-
         try {
             FileUtils.downloadFile(requestDTO.getName(), requestDTO.getPath(), request, response);
         } catch (FileNotFoundException e) {

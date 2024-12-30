@@ -32,7 +32,7 @@ server:
     uri-encoding: utf-8
 
 upload:
-  mode: RANDOM_ACCESS
+  mode: randomAccessUpload
   executor:
     queue-max-size: 20
   block:

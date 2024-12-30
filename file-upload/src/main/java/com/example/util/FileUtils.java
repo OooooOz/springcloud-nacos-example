@@ -1,27 +1,28 @@
 package com.example.util;
 
-import com.example.contant.FileConstant;
-import lombok.extern.slf4j.Slf4j;
+import java.io.*;
+import java.lang.reflect.Method;
+import java.nio.MappedByteBuffer;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import com.example.contant.FileConstant;
+import com.example.model.BusinessException;
+
+import lombok.extern.slf4j.Slf4j;
+import sun.misc.Cleaner;
 
 @Slf4j
 @Component
 public class FileUtils {
-
-    public static final String PATH_HEAD = "/vagrant/";
-    public static final String USER_HEAD = "/data/User";
-    public static final String DOT = ".";
-    public static final String SLASH_ONE = "/";
-    public static final String SLASH_TWO = "\\";
-    public static final String HOME = "";
-    private static String uploadWindowRoot;
 
     public static void downloadFile(String name, String path, HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException {
         File downloadFile = new File(path);
@@ -90,7 +91,6 @@ public class FileUtils {
      * 去除首尾斜杠 path
      */
     public static String withoutHeadAndTailDiagonal(String path) {
-
         int start = 0;
         int end = 0;
         boolean existHeadDiagonal = path.startsWith(FileConstant.FILE_SEPARATORCHAR);
@@ -115,5 +115,39 @@ public class FileUtils {
             pdfFolder.mkdirs();
         }
         return path;
+    }
+
+    /**
+     * 在MappedByteBuffer释放后再对它进行读操作的话就会引发jvm crash，在并发情况下很容易发生 正在释放时另一个线程正开始读取，于是crash就发生了。所以为了系统稳定性释放前一般需要检 查是否还有线程在读或写
+     */
+    public static void freedMappedByteBuffer(final MappedByteBuffer mappedByteBuffer) {
+
+        try {
+            if (mappedByteBuffer == null) {
+                return;
+            }
+
+            mappedByteBuffer.force();
+            AccessController.doPrivileged(new PrivilegedAction<Object>() {
+                @Override
+                public Object run() {
+
+                    try {
+                        Method getCleanerMethod = mappedByteBuffer.getClass().getMethod("cleaner", new Class[0]);
+                        getCleanerMethod.setAccessible(true);
+                        Cleaner cleaner = (Cleaner)getCleanerMethod.invoke(mappedByteBuffer, new Object[0]);
+                        cleaner.clean();
+                    } catch (Exception e) {
+                        log.error("clean MappedByteBuffer error!!!", e);
+                    }
+                    log.info("clean MappedByteBuffer completed!!!");
+                    return null;
+                }
+            });
+
+        } catch (Exception e) {
+            log.error("clean MappedByteBuffer error!!!", e);
+            throw new BusinessException("clean MappedByteBuffer exception：{}", e.getMessage());
+        }
     }
 }

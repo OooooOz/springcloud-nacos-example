@@ -2,15 +2,15 @@ package com.example.service;
 
 import java.io.IOException;
 
-import com.example.model.dto.FileUploadRequest;
-import com.example.model.vo.FileUpload;
+import com.example.model.dto.FileUploadDTO;
+import com.example.model.vo.FileUploadVo;
 
 public interface FileService {
 
-    FileUpload upload(FileUploadRequest fileUploadRequestDTO) throws IOException;
+    FileUploadVo upload(FileUploadDTO dto) throws IOException;
 
-    FileUpload sliceUpload(FileUploadRequest fileUploadRequestDTO);
+    FileUploadVo sliceUpload(FileUploadDTO dto);
 
-    FileUpload checkFileMd5(FileUploadRequest fileUploadRequestDTO) throws IOException;
+    FileUploadVo checkFileMd5(FileUploadDTO dto) throws IOException;
 
 }

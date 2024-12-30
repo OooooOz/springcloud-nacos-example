@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.contant.FileConstant;
-import com.example.model.dto.FileUploadRequest;
+import com.example.model.dto.FileUploadDTO;
 import com.example.util.SystemUtil;
 
 @Component
-public class FilePathHelper {
+public class FileHelper {
 
     @Value("${upload.root.dir}")
     private String uploadRootDir;
@@ -30,7 +30,7 @@ public class FilePathHelper {
         return path;
     }
 
-    public String getPath(FileUploadRequest param) {
+    public String getPath(FileUploadDTO param) {
         if (StringUtils.isNotBlank(param.getPath())) {
             return param.getPath();
         } else {

@@ -21,4 +21,15 @@ public class CommonUtil {
         checkBusinessException(anEnum != null, title + "不正确");
         return anEnum;
     }
+
+    public static String checkEmpty(String value) {
+        return checkEmptyDefault(value, StringUtils.EMPTY);
+    }
+
+    public static String checkEmptyDefault(String value, String defaultValue) {
+        if (StringUtils.isEmpty(value)) {
+            return defaultValue;
+        }
+        return value;
+    }
 }

@@ -1,9 +1,9 @@
 package com.example.service.strategy;
 
-import com.example.model.dto.FileUploadRequest;
-import com.example.model.vo.FileUpload;
+import com.example.model.dto.FileUploadDTO;
+import com.example.model.vo.FileUploadVo;
 
 public interface SliceUploadStrategy {
 
-    FileUpload sliceUpload(FileUploadRequest param);
+    FileUploadVo sliceUpload(FileUploadDTO param);
 }
