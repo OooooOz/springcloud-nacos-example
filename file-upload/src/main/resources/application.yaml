@@ -11,10 +11,10 @@ spring:
     password: 123456
 
   redis:
-    host: localhost
+    host: 172.22.130.9
     port: 6379
     #    password: ENC(VhAJJwXY86SEI+b0tY5eJxhZTDsTLpBv1OT5lmFsuSfy4UuPvV06npnGbdkqYjgp)
-    password: 123456
+    password: m76xjMnUTbUxBV70
     database: 15
 
   servlet:
@@ -32,7 +32,7 @@ server:
     uri-encoding: utf-8
 
 upload:
-  mode: randomAccessUpload
+  mode: mappedByteBufferUpload
   executor:
     queue-max-size: 20
   block:

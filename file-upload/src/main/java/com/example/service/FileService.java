@@ -11,6 +11,6 @@ public interface FileService {
 
     FileUploadVo sliceUpload(FileUploadDTO dto);
 
-    FileUploadVo checkFileMd5(FileUploadDTO dto) throws IOException;
+    FileUploadVo checkFileMd5(FileUploadDTO dto);
 
 }

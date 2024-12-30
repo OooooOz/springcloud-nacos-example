@@ -9,10 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.model.BaseResponse;
 import com.example.model.dto.FileDownloadRequest;
@@ -40,7 +37,7 @@ public class FileController {
     @Autowired
     private HttpServletResponse response;
 
-    @PostMapping(value = "/upload/big")
+    @PostMapping("/upload/big")
     public BaseResponse<FileUploadVo> upload(FileUploadParamDTO fileUploadParamDTO) throws IOException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("upload");
@@ -65,8 +62,8 @@ public class FileController {
         return res;
     }
 
-    @PostMapping(value = "checkFileMd5")
-    public BaseResponse<FileUploadVo> checkFileMd5(String md5, String path) throws IOException {
+    @GetMapping("/checkFileMd5")
+    public BaseResponse<FileUploadVo> checkFileMd5(@RequestParam("md5") String md5, @RequestParam(value = "path", required = false) String path) {
         FileUploadDTO param = new FileUploadDTO().setPath(path).setMd5(md5);
         FileUploadVo fileUploadVo = fileService.checkFileMd5(param);
         return BaseResponse.SUCCESS(fileUploadVo);
