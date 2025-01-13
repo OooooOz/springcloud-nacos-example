@@ -1,12 +1,14 @@
 package com.example.validate.dto;
 
-import lombok.Data;
-import org.hibernate.validator.constraints.Length;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import org.hibernate.validator.constraints.Length;
+
+import lombok.Data;
 
 @Data
 public class UserDTO {
@@ -18,7 +20,6 @@ public class UserDTO {
     private String userName;
 
     @Valid
-//    @NotNull
     private Job job;
 
     @Valid

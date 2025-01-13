@@ -10,7 +10,6 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.log.OperateLog;
 import com.example.model.BaseResponse;
 import com.example.validate.dto.UserDTO;
 import com.example.validate.dto.ValidationList;
@@ -21,7 +20,6 @@ import com.example.validate.dto.ValidationList;
 public class UserController {
 
     @PostMapping("/save")
-    @OperateLog(serviceId = "user", userName = "#userDTO.userName")
     public BaseResponse saveUser(@RequestBody @Validated UserDTO userDTO) {
         // 校验通过，才会执行业务逻辑处理
         return BaseResponse.SUCCESS();
@@ -67,7 +65,6 @@ public class UserController {
 
     // 查询参数
     @GetMapping("getByAccount")
-    @OperateLog(serviceId = "user", userName = "#account")
     public BaseResponse getByAccount(@Length(min = 6, max = 20) @NotNull String account) {
         // 校验通过，才会执行业务逻辑处理
         return BaseResponse.SUCCESS();
