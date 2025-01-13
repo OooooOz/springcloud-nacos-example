@@ -1,15 +1,13 @@
 package com.example.validate.provider;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.validator.spi.group.DefaultGroupSequenceProvider;
-
+import cn.hutool.core.util.ObjectUtil;
 import com.example.validate.dto.BaseGroupSequenceProviderSubmitDTO;
 import com.example.validate.dto.GroupSequenceProviderSubmitDTO;
 import com.example.validate.dto.GroupValid;
+import org.hibernate.validator.spi.group.DefaultGroupSequenceProvider;
 
-import cn.hutool.core.util.ObjectUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContractGroupSequenceProvider implements DefaultGroupSequenceProvider<GroupSequenceProviderSubmitDTO> {
 
@@ -17,6 +15,10 @@ public class ContractGroupSequenceProvider implements DefaultGroupSequenceProvid
     public List<Class<?>> getValidationGroups(GroupSequenceProviderSubmitDTO dto) {
         List<Class<?>> defaultGroupSequence = new ArrayList<>();
         defaultGroupSequence.add(BaseGroupSequenceProviderSubmitDTO.class);
+        defaultGroupSequence.add(GroupSequenceProviderSubmitDTO.class);
+        if (dto == null) {
+            return defaultGroupSequence;
+        }
 
         if (ObjectUtil.equals("PERSON", dto.getContractType())) {
             // 个人合同校验
