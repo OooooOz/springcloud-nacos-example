@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.common.mapper.CommonConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.common.model.entity.CommonConfig">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="configType" column="config_type" jdbcType="VARCHAR"/>
+            <result property="configTypeDesc" column="config_type_desc" jdbcType="VARCHAR"/>
+            <result property="configValue" column="config_value" jdbcType="VARCHAR"/>
+            <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,config_type,config_type_desc,
+        config_value,deleted
+    </sql>
+</mapper>
