@@ -15,7 +15,9 @@ public interface CommonConfigService extends IService<CommonConfig> {
     Long submit(CommonConfigDTO commonConfigDTO);
 
     /**
-     * 其他事务操作
+     * 通知其他系统
+     *
+     * @param id
      */
-    void otherTransactionalOperate(CommonConfigDTO commonConfigDTO);
+    void notifyOtherSystem(Long id);
 }
