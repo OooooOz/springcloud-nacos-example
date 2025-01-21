@@ -1,10 +1,10 @@
-package task;
-
-import org.junit.Test;
+package com.example.task;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import org.junit.Test;
 
 /**
  * https://blog.csdn.net/qq_41563912/article/details/126347720

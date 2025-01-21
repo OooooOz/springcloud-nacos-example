@@ -1,19 +1,21 @@
-package cover;
+package com.example.cover;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+
 import com.alibaba.fastjson.JSON;
 import com.example.cover.po.JobPO;
 import com.example.cover.po.UserInfoPO;
 import com.example.cover.vo.UserInfoVO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 
 public class HuToolCoverTest {
 

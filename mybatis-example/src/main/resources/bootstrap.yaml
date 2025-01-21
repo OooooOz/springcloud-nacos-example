@@ -59,3 +59,13 @@ mybatis-plus:
 
 server:
   port: 8091
+
+
+wechatwork:
+  apps:
+    - corpId: corpId111
+      corpSecret: corpSecret111
+      appCode: appCode111
+    - corpId: corpId222
+      corpSecret: corpSecret222
+      appCode: appCode222
