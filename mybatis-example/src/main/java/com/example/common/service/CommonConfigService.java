@@ -13,14 +13,7 @@ public interface CommonConfigService extends IService<CommonConfig> {
      * @param commonConfigDTO
      * @return
      */
-    Long submit(CommonConfigDTO commonConfigDTO);
-
-    /**
-     * 通知其他系统
-     *
-     * @param id
-     */
-    void notifyOtherSystem(Long id);
+    NotifySystemDTO submit(CommonConfigDTO commonConfigDTO);
 
     void doNotifyOtherSystem(NotifySystemDTO dto);
 }

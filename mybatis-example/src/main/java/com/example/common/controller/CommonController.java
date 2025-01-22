@@ -1,6 +1,7 @@
 package com.example.common.controller;
 
 import com.example.common.model.dto.CommonConfigDTO;
+import com.example.common.model.dto.NotifySystemDTO;
 import com.example.common.service.CommonConfigService;
 import com.example.model.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class CommonController {
      */
     @PostMapping("/config/submit")
     public BaseResponse submit(@RequestBody @Validated CommonConfigDTO commonConfigDTO) {
-        Long id = commonConfigService.submit(commonConfigDTO);
-        return BaseResponse.SUCCESS(id);
+        NotifySystemDTO res = commonConfigService.submit(commonConfigDTO);
+        return BaseResponse.SUCCESS(res);
     }
 }
