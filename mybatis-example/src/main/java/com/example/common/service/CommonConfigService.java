@@ -2,6 +2,7 @@ package com.example.common.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.common.model.dto.CommonConfigDTO;
+import com.example.common.model.dto.NotifySystemDTO;
 import com.example.common.model.entity.CommonConfig;
 
 public interface CommonConfigService extends IService<CommonConfig> {
@@ -20,4 +21,6 @@ public interface CommonConfigService extends IService<CommonConfig> {
      * @param id
      */
     void notifyOtherSystem(Long id);
+
+    void doNotifyOtherSystem(NotifySystemDTO dto);
 }
