@@ -12,6 +12,18 @@
 > 需要对Spring底层Bean容器注册有所了解
 
 ### 2.1. 事件监听方法处理器EventListenerMethodProcessors
+> 先看一下这个类
+> - 实现了SmartInitializingSingleton，就意味着初始化之后就会触发afterSingletonsInstantiated方法调用
+> - 实现了BeanFactoryPostProcessor，就意味着会触发EventListenerMethodProcessor.postProcessBeanFactory
+> - 下文会有说明，眼熟一下
+```java
+public class EventListenerMethodProcessor
+		implements SmartInitializingSingleton, ApplicationContextAware, BeanFactoryPostProcessor{
+    
+}
+```
+
+
 > 在SpringBoot启动类run方法[(SpringBoot的启动整体过程2.2节)](https://blog.csdn.net/weixin_43901882/article/details/119360255)中有两个方法
 > - createApplicationContext创建容器上下文时注册
     EventListenerMethodProcessor的Bean定义
@@ -46,6 +58,9 @@ public ConfigurableApplicationContext run(String... args) {
 public void refresh() throws BeansException, IllegalStateException {
     synchronized (this.startupShutdownMonitor) {
         try{
+
+            // 调用Bean工厂的后置处理器
+            invokeBeanFactoryPostProcessors(beanFactory);
             
             // 初始化事件广播
             initApplicationEventMulticaster();
@@ -146,4 +161,51 @@ public void preInstantiateSingletons() throws BeansException {
 
 ```
 
-##### 2.1.2.2. EventListenerMethodProcessor.afterSingletonsInstantiated
+##### 2.1.2.2. EventListenerMethodProcessor.processBean
+> 
+
+```java
+	private void processBean(final String beanName, final Class<?> targetType) {
+		if (!this.nonAnnotatedClasses.contains(targetType) &&
+				AnnotationUtils.isCandidateClass(targetType, EventListener.class) &&
+				!isSpringContainerClass(targetType)) {
+
+			Map<Method, EventListener> annotatedMethods = null;
+			try {
+                // 这里获取目标bean上有@EventListener（包括嵌套引用有该注解，比如@TransactionalEventListener）注解标注的方法
+				annotatedMethods = MethodIntrospector.selectMethods(targetType,
+						(MethodIntrospector.MetadataLookup<EventListener>) method ->
+								AnnotatedElementUtils.findMergedAnnotation(method, EventListener.class));
+			}
+			catch {...}
+
+			if (CollectionUtils.isEmpty(annotatedMethods)) {...}
+			else {
+				// Non-empty set of methods
+				ConfigurableApplicationContext context = this.applicationContext;
+				Assert.state(context != null, "No ApplicationContext set");
+                // 在上文2.1的refresh方法中invokeBeanFactoryPostProcessors就会触发EventListenerMethodProcessor.postProcessBeanFactory初始化eventListenerFactories工厂
+                // 这里会拿到两个事件监听工厂类DefaultEventListenerFactory和TransactionalEventListenerFactory
+                // 后置是针对事务有一些特殊处理
+				List<EventListenerFactory> factories = this.eventListenerFactories;
+				Assert.state(factories != null, "EventListenerFactory List not initialized");
+				for (Method method : annotatedMethods.keySet()) {
+					for (EventListenerFactory factory : factories) {
+						if (factory.supportsMethod(method)) {
+							Method methodToUse = AopUtils.selectInvocableMethod(method, context.getType(beanName));
+							ApplicationListener<?> applicationListener =
+									factory.createApplicationListener(beanName, targetType, methodToUse);
+							if (applicationListener instanceof ApplicationListenerMethodAdapter) {
+								((ApplicationListenerMethodAdapter) applicationListener).init(context, this.evaluator);
+							}
+							context.addApplicationListener(applicationListener);
+							break;
+						}
+					}
+				}
+				if (logger.isDebugEnabled()) {...}
+			}
+		}
+	}
+
+```
