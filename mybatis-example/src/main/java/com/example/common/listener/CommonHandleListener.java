@@ -3,6 +3,8 @@ package com.example.common.listener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.example.common.model.dto.CommonEventDTO;
 import com.example.common.model.dto.NotifySystemDTO;
@@ -36,6 +38,21 @@ public class CommonHandleListener {
                     commonConfigService.doNotifyOtherSystem(dto);
                 }
             });
+        }
+    }
+
+    @TransactionalEventListener(
+        // 监听的阶段
+        phase = TransactionPhase.AFTER_COMMIT,
+        // 监听的条件
+        condition = "#eventDTO.source == T(com.example.common.listener.CommonHandleListener).NOTIFY_OTHER_SYSTEM_EVENT")
+    public void onNotifyOtherSystemTransactionalEvent(CommonEventDTO eventDTO) {
+        if (NOTIFY_OTHER_SYSTEM_EVENT.equals(eventDTO.getSource())) {
+            log.info("事务监听器-事务提交后执行");
+            if (eventDTO.getTargetClass() instanceof NotifySystemDTO) {
+                NotifySystemDTO dto = (NotifySystemDTO)eventDTO.getTargetClass();
+                commonConfigService.doNotifyOtherSystem(dto);
+            }
         }
     }
 }

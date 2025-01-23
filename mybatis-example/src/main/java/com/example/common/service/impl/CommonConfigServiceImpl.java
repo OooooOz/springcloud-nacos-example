@@ -1,7 +1,14 @@
 package com.example.common.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.ObjectUtil;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.listener.CommonHandleListener;
@@ -12,14 +19,10 @@ import com.example.common.model.dto.NotifySystemDTO;
 import com.example.common.model.entity.CommonConfig;
 import com.example.common.model.vo.DetailVo;
 import com.example.common.service.CommonConfigService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.List;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjectUtil;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
