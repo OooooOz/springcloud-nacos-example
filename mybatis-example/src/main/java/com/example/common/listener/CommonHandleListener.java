@@ -27,9 +27,9 @@ public class CommonHandleListener {
 
     @EventListener(condition = "#eventDTO.source == T(com.example.common.listener.CommonHandleListener).NOTIFY_OTHER_SYSTEM_EVENT")
     public void onNotifyOtherSystemEvent(CommonEventDTO eventDTO) {
+        log.info("EventListener事务提交后执行");
         if (NOTIFY_OTHER_SYSTEM_EVENT.equals(eventDTO.getSource())) {
             TransactionalExecutionUtil.executeAfterTransactionCommit(() -> {
-                log.info("事务提交后执行");
                 // afterCommit方法如果发生异常,不会影响之前事务的提交
                 // throw new RuntimeException("afterCommit方法如果发生异常");
 
@@ -47,8 +47,8 @@ public class CommonHandleListener {
         // 监听的条件
         condition = "#eventDTO.source == T(com.example.common.listener.CommonHandleListener).NOTIFY_OTHER_SYSTEM_EVENT")
     public void onNotifyOtherSystemTransactionalEvent(CommonEventDTO eventDTO) {
+        log.info("TransactionalEventListener事务提交后执行");
         if (NOTIFY_OTHER_SYSTEM_EVENT.equals(eventDTO.getSource())) {
-            log.info("事务监听器-事务提交后执行");
             if (eventDTO.getTargetClass() instanceof NotifySystemDTO) {
                 NotifySystemDTO dto = (NotifySystemDTO)eventDTO.getTargetClass();
                 commonConfigService.doNotifyOtherSystem(dto);
