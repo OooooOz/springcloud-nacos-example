@@ -139,11 +139,12 @@ public void refresh() throws BeansException, IllegalStateException {
 ```java
 protected void initApplicationEventMulticaster() {
     ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+    // 如果有自定义的组播器，即beanName为applicationEventMulticaster，则用自定义的组播器
     if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
         ... ...
     }
     else {
-        // 初始化组播者SimpleApplicationEventMulticaster，往bean公池注册单例bean
+        // 默认初始化组播器SimpleApplicationEventMulticaster，往bean公池注册单例bean
         this.applicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);
         beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);
     }
@@ -168,7 +169,7 @@ protected void initApplicationEventMulticaster() {
 			getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);
 		}
 
-		// 早期事件调用
+		// 早期事件调用，此时监听器已注册，就将早期的事件earlyApplicationEvents进行广播，然后置空
 		Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
 		this.earlyApplicationEvents = null;
 		if (!CollectionUtils.isEmpty(earlyEventsToProcess)) {
@@ -179,17 +180,29 @@ protected void initApplicationEventMulticaster() {
 	}
 ```
 > - getApplicationEventMulticaster()获取到的组播者就是2.1.2初始化的SimpleApplicationEventMulticaster
-> - SimpleApplicationEventMulticaster的父类AbstractApplicationEventMulticaster持有一个辅助的寻回犬defaultRetriever对象，内部有两个集合
+> - SimpleApplicationEventMulticaster的父类AbstractApplicationEventMulticaster持有一个辅助的检索器defaultRetriever对象，内部有两个集合
 >   - applicationListeners：辅助持有的监听器集合
 >   - applicationListenerBeans：辅助持有的监听器beanName
 ```java
-	private class DefaultListenerRetriever {
+public abstract class AbstractApplicationEventMulticaster
+        implements ApplicationEventMulticaster, BeanClassLoaderAware, BeanFactoryAware {
 
-		public final Set<ApplicationListener<?>> applicationListeners = new LinkedHashSet<>();
+    // 持有的辅助检索器对象
+    private final DefaultListenerRetriever defaultRetriever = new DefaultListenerRetriever();
 
-		public final Set<String> applicationListenerBeans = new LinkedHashSet<>();
+    // 监听方法同步调用的监听器缓存
+    final Map<ListenerCacheKey, CachedListenerRetriever> retrieverCache = new ConcurrentHashMap<>(64);
 
-	}
+    ......
+
+    private class DefaultListenerRetriever {
+
+        public final Set<ApplicationListener<?>> applicationListeners = new LinkedHashSet<>();
+
+        public final Set<String> applicationListenerBeans = new LinkedHashSet<>();
+
+    }
+}
 ```
 
 ##### 2.1.3.1. AbstractApplicationEventMulticaster.addApplicationListener
@@ -334,7 +347,7 @@ public void preInstantiateSingletons() throws BeansException {
 							Method methodToUse = AopUtils.selectInvocableMethod(method, context.getType(beanName));
                             // 通过当前工厂去创建监听器
                             // 默认的工厂类DefaultEventListenerFactory会直接创建ApplicationListenerMethodAdapter监听器方法适配器；
-                            // TransactionalEventListenerFactory会创建TransactionalApplicationListenerMethodAdapter监听器方法适配器，继承了ApplicationListenerMethodAdapter
+                            // TransactionalEventListenerFactory会创建ApplicationListenerMethodTransactionalAdapter监听器方法适配器，继承了ApplicationListenerMethodAdapter
 							ApplicationListener<?> applicationListener =
 									factory.createApplicationListener(beanName, targetType, methodToUse);
 							if (applicationListener instanceof ApplicationListenerMethodAdapter) {
@@ -391,14 +404,14 @@ public class DefaultEventListenerFactory implements EventListenerFactory, Ordere
         this.declaredEventTypes = resolveDeclaredEventTypes(method, ann);
         // 获取当前监听方法上@EventListener注解的condition属性值
         this.condition = (ann != null ? ann.condition() : null);
-        // 获取当前监听方法顺序值，如果有标注@Order就会获取改注解的value，无则null
+        // 获取当前监听方法顺序值，如果有标注@Order就会获取改注解的value，无则默认0
         this.order = resolveOrder(this.targetMethod);
     }
 ```
 
 ##### 2.1.4.4. TransactionalEventListenerFactory.createApplicationListener
 > - DefaultEventListenerFactory也实现了Ordered，并且它定义的优先级是50，所以它比DefaultEventListenerFactory优先级高
-> - createApplicationListener方法就创建的是TransactionalApplicationListenerMethodAdapter
+> - createApplicationListener方法就创建的是ApplicationListenerMethodTransactionalAdapter
 
 ```java
 public class TransactionalEventListenerFactory implements EventListenerFactory, Ordered {
@@ -416,35 +429,28 @@ public class TransactionalEventListenerFactory implements EventListenerFactory, 
     }
 
     public ApplicationListener<?> createApplicationListener(String beanName, Class<?> type, Method method) {
-        return new TransactionalApplicationListenerMethodAdapter(beanName, type, method);
-    }
-}
-
-public class TransactionalApplicationListenerMethodAdapter extends ApplicationListenerMethodAdapter
-        implements TransactionalApplicationListener<ApplicationEvent> {
-
-    private final TransactionalEventListener annotation;
-
-    private final TransactionPhase transactionPhase;
-
-    private final List<SynchronizationCallback> callbacks = new CopyOnWriteArrayList<>();
-
-    
-    public TransactionalApplicationListenerMethodAdapter(String beanName, Class<?> targetClass, Method method) {
-        // 父级ApplicationListenerMethodAdapter初始化，复用@EventListener能力
-        super(beanName, targetClass, method);
-        TransactionalEventListener ann =
-                AnnotatedElementUtils.findMergedAnnotation(method, TransactionalEventListener.class);
-        if (ann == null) {
-            throw new IllegalStateException("No TransactionalEventListener annotation found on method: " + method);
-        }
-        this.annotation = ann;
-        // 获取当前监听方法上@TransactionalEventListener注解的phase属性值
-        this.transactionPhase = ann.phase();
+        return new ApplicationListenerMethodTransactionalAdapter(beanName, type, method);
     }
 }
 ```
 
+```java
+class ApplicationListenerMethodTransactionalAdapter extends ApplicationListenerMethodAdapter {
+
+    private final TransactionalEventListener annotation;
+
+
+    public ApplicationListenerMethodTransactionalAdapter(String beanName, Class<?> targetClass, Method method) {
+        // 父级ApplicationListenerMethodAdapter初始化，复用@EventListener能力
+        super(beanName, targetClass, method);
+        TransactionalEventListener ann = AnnotatedElementUtils.findMergedAnnotation(method, TransactionalEventListener.class);
+        if (ann == null) {
+            throw new IllegalStateException("No TransactionalEventListener annotation found on method: " + method);
+        }
+        this.annotation = ann;
+    }
+}
+```
 ##### 2.1.4.5. AbstractApplicationContext.addApplicationListener
 
 ```java
@@ -463,7 +469,409 @@ public class TransactionalApplicationListenerMethodAdapter extends ApplicationLi
 ### 2.2. 事件监听方法处理器EventListenerMethodProcessors小结
 > - IOC容器管理时会注册EventListenerMethodProcessors组件
 > - EventListenerMethodProcessors组件进行系列生命周期处理后，触发其afterSingletonsInstantiated方法
-> - 对@EventListener标注的监听方法解析,再有工厂类生成监听器方法适配器ApplicationListenerMethodAdapter，加入容器和组播者的监听器集合
+> - 对@EventListener标注的监听方法解析,再由工厂类生成监听器方法适配器ApplicationListenerMethodAdapter，加入容器和组播者的监听器集合
 
 
 ## 3. publishEvent事件推送
+> - 我们由上述栗子，来看看该方法的调用，最终是调用到AbstractApplicationContext#publishEvent(java.lang.Object, org.springframework.core.ResolvableType)
+
+### 3.1. AbstractApplicationContext.publishEvent
+> - 声明事件为ApplicationEvent类型，如果不是就包装成PayloadApplicationEvent（其父类就是是ApplicationEvent）
+> - 通过组播器multicastEvent方法进行推送
+> - 如果有父上下文，也向父上下文递归推送该事件
+```java
+	protected void publishEvent(Object event, @Nullable ResolvableType eventType) {
+
+        // 声明事件为ApplicationEvent类型，如果不是就包装成PayloadApplicationEvent（其父类就是是ApplicationEvent）
+		ApplicationEvent applicationEvent;
+		if (event instanceof ApplicationEvent) {
+			applicationEvent = (ApplicationEvent) event;
+		} else {
+			applicationEvent = new PayloadApplicationEvent<>(this, event);
+			if (eventType == null) {
+				eventType = ((PayloadApplicationEvent<?>) applicationEvent).getResolvableType();
+			}
+		}
+
+		// 如果不为空，则还未注册监听器，则加入早期事件集合earlyApplicationEvents
+        // 组播器在上文2.1.3. refresh->registerListeners方法，注册完并推送早期事件，会将其置空
+		if (this.earlyApplicationEvents != null) {
+			this.earlyApplicationEvents.add(applicationEvent);
+		}
+		else {
+            // 我们应用推送的事件，都通过multicastEvent方法进行推送
+			getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
+		}
+
+		// 如果有父上下文，也向父上下文递归推送该事件，向应用栗子手动推送的事件，最后parent都是null的
+		if (this.parent != null) {
+			if (this.parent instanceof AbstractApplicationContext) {
+				((AbstractApplicationContext) this.parent).publishEvent(event, eventType);
+			}
+			else {
+				this.parent.publishEvent(event);
+			}
+		}
+	}
+
+```
+
+### 3.2. SimpleApplicationEventMulticaster.multicastEvent
+> - 上文2.1.2也说了，初始化的组播器就是SimpleApplicationEventMulticaster
+> - 默认taskExecutor为空，即同步调用事件监听方法
+>   - 如果想要异步，最好还是在监听方法内进行异步处理，（也就是事件同步调用，监听方法的逻辑异步处理）
+>   - taskExecutor不为空则全局事件监听都是异步处理的
+>   - taskExecutor不为空，就是自定义组播器applicationEventMulticaster的时候给taskExecutor赋值（推荐使用线程池）
+
+```java
+	@Override
+	public void multicastEvent(final ApplicationEvent event, @Nullable ResolvableType eventType) {
+		ResolvableType type = (eventType != null ? eventType : resolveDefaultEventType(event));
+        // 获取任务执行器，默认为空，即会同步调用监听方法
+		Executor executor = getTaskExecutor();
+        // 获取符合当前事件类型的事件监听器，循环处理每个监听器逻辑
+		for (ApplicationListener<?> listener : getApplicationListeners(event, type)) {
+			if (executor != null) {
+				executor.execute(() -> invokeListener(listener, event));
+			}
+			else {
+				invokeListener(listener, event);
+			}
+		}
+	}
+```
+#### 3.2.1. AbstractApplicationEventMulticaster.getApplicationListeners
+> - 组播器的父类AbstractApplicationEventMulticaster持有一个辅助的检索器defaultRetriever对象还有一个本地监听器缓存retrieverCache（上文2.1.3）
+> - 命中缓存就直接从CachedListenerRetriever检索器获取监听器列表返回，否则retrieveApplicationListeners方法进行查找
+>   - 缓存key为事件类型eventType和来源标识类型sourceType构成的ListenerCacheKey对象
+>     - 提一嘴：这个对象重写了equals方法，只要eventType、sourceType都相等就是同一个对象
+>   - 缓存value是内部类对象CachedListenerRetriever
+
+```java
+	protected Collection<ApplicationListener<?>> getApplicationListeners(
+			ApplicationEvent event, ResolvableType eventType) {
+
+        // 创建缓存key，只要eventType、sourceType都相等就是同一个对象
+		Object source = event.getSource();
+		Class<?> sourceType = (source != null ? source.getClass() : null);
+		ListenerCacheKey cacheKey = new ListenerCacheKey(eventType, sourceType);
+
+		// 准备新的缓存检索器
+		CachedListenerRetriever newRetriever = null;
+
+        // 尝试从缓存中获取已存在的检索器
+		CachedListenerRetriever existingRetriever = this.retrieverCache.get(cacheKey);
+        
+		if (existingRetriever == null) {
+			if (this.beanClassLoader == null ||
+					(ClassUtils.isCacheSafe(event.getClass(), this.beanClassLoader) &&
+							(sourceType == null || ClassUtils.isCacheSafe(sourceType, this.beanClassLoader)))) {
+                //如果缓存不命中，且类加载器安全（防止类加载器泄漏），则创建新的检索器
+				newRetriever = new CachedListenerRetriever();
+                
+                // 如果缓存中已经有cacheKey，则putIfAbsent返回之前的缓存对象，即existingRetriever不为空
+                // 如果缓存中没有cacheKey，则putIfAbsent返回null，即existingRetriever为空
+				existingRetriever = this.retrieverCache.putIfAbsent(cacheKey, newRetriever);
+                // 这块什么时候会满足，有点不太理解？？
+				if (existingRetriever != null) {
+					newRetriever = null;  // no need to populate it in retrieveApplicationListeners
+				}
+			}
+		}
+
+        // 如果存在缓存的检索器，尝试获取缓存的监听器返回
+		if (existingRetriever != null) {
+			Collection<ApplicationListener<?>> result = existingRetriever.getApplicationListeners();
+			if (result != null) {
+				return result;
+			}
+			// If result is null, the existing retriever is not fully populated yet by another thread.
+			// Proceed like caching wasn't possible for this current local attempt.
+		}
+
+        // 缓存不命中时，通过retrieveApplicationListeners方法获取监听器返回
+		return retrieveApplicationListeners(eventType, sourceType, newRetriever);
+	}
+```
+
+#### 3.2.2. AbstractApplicationEventMulticaster.retrieveApplicationListeners
+> - 缓存不命中时，先写的缓存检索器对象，再通过该方法获取支持当前事件处理的监听器集合数据，再更新缓存的检索器对象持有的监听器集合
+
+```java
+	private Collection<ApplicationListener<?>> retrieveApplicationListeners(
+			ResolvableType eventType, @Nullable Class<?> sourceType, @Nullable CachedListenerRetriever retriever) {
+
+        // 定义查找到所有的监听器列表
+		List<ApplicationListener<?>> allListeners = new ArrayList<>();
+        // 定义过滤后的支持当前事件的监听器列表和beanName
+		Set<ApplicationListener<?>> filteredListeners = (retriever != null ? new LinkedHashSet<>() : null);
+		Set<String> filteredListenerBeans = (retriever != null ? new LinkedHashSet<>() : null);
+
+		Set<ApplicationListener<?>> listeners;
+		Set<String> listenerBeans;
+        // 对组播器持有的默认检索器defaultRetriever加锁，将该检索器持有已注册的监听器和监听器beanName赋值到当前局部变量
+        // 在上文2.1.3.registerListeners时，就会注册监听器到默认的检索器defaultRetriever里头
+		synchronized (this.defaultRetriever) {
+			listeners = new LinkedHashSet<>(this.defaultRetriever.applicationListeners);
+			listenerBeans = new LinkedHashSet<>(this.defaultRetriever.applicationListenerBeans);
+		}
+
+		// 循环注册的监听器，通过supportsEvent方法来判断每个监听器是否支持当前事件（判断事件类型、来源类型），然后写入当前的局部变量里头
+        // @EventListener注解的classes过滤就是在这里处理的
+		for (ApplicationListener<?> listener : listeners) {
+			if (supportsEvent(listener, eventType, sourceType)) {
+				if (retriever != null) {
+					filteredListeners.add(listener);
+				}
+				allListeners.add(listener);
+			}
+		}
+        
+        // 循环注册的监听器beanName，通过supportsEvent方法来判断每个监听器是否支持当前事件（判断事件类型、来源类型），支持就写入当前的局部变量里头，不支持就移除
+        // 按beanName来检索监听器，可能与注册的监听器重合，还需要判断去重
+		if (!listenerBeans.isEmpty()) {
+			ConfigurableBeanFactory beanFactory = getBeanFactory();
+			for (String listenerBeanName : listenerBeans) {
+				try {
+					if (supportsEvent(beanFactory, listenerBeanName, eventType)) { ... }
+					else { ... }
+				}
+				catch (NoSuchBeanDefinitionException ex) { ... }
+			}
+		}
+
+        // 将所有的监听器进行排序，order越小约优先
+        // 如果是ApplicationListenerMethodAdapter，在上文2.1.4.3节新建的时候就会解析监听方法的@Order注解的value值
+		AnnotationAwareOrderComparator.sort(allListeners);
+		if (retriever != null) {
+            // 更新缓存的检索器持有的监听器集合
+			if (filteredListenerBeans.isEmpty()) {
+                // filteredListenerBeans为空时allListeners和filteredListeners其实是一样的
+				retriever.applicationListeners = new LinkedHashSet<>(allListeners);
+				retriever.applicationListenerBeans = filteredListenerBeans;
+			}
+			else {
+				retriever.applicationListeners = filteredListeners;
+				retriever.applicationListenerBeans = filteredListenerBeans;
+			}
+		}
+		return allListeners;
+	}
+
+```
+
+#### 3.2.3. AbstractApplicationEventMulticaster.CachedListenerRetriever.getApplicationListeners
+> - 缓存命中时，直接从缓存的检索器对象获取监听器集合数据
+
+```java
+	private class CachedListenerRetriever {
+
+		@Nullable
+		public volatile Set<ApplicationListener<?>> applicationListeners;
+
+		@Nullable
+		public volatile Set<String> applicationListenerBeans;
+
+		@Nullable
+		public Collection<ApplicationListener<?>> getApplicationListeners() {
+            // 写缓存的时候，就已经把符合当前事件的监听器集合数据更新到当前缓存的检索器了
+			Set<ApplicationListener<?>> applicationListeners = this.applicationListeners;
+			Set<String> applicationListenerBeans = this.applicationListenerBeans;
+			if (applicationListeners == null || applicationListenerBeans == null) {
+				// Not fully populated yet
+				return null;
+			}
+
+            // 从applicationListenerBeans和applicationListeners获取监听器数据，然后排序
+			List<ApplicationListener<?>> allListeners = new ArrayList<>(
+					applicationListeners.size() + applicationListenerBeans.size());
+			allListeners.addAll(applicationListeners);
+			if (!applicationListenerBeans.isEmpty()) {
+				BeanFactory beanFactory = getBeanFactory();
+				for (String listenerBeanName : applicationListenerBeans) {
+					try {
+						allListeners.add(beanFactory.getBean(listenerBeanName, ApplicationListener.class));
+					}
+					catch (NoSuchBeanDefinitionException ex) { ... }
+				}
+			}
+			if (!applicationListenerBeans.isEmpty()) {
+				AnnotationAwareOrderComparator.sort(allListeners);
+			}
+			return allListeners;
+		}
+	}
+
+```
+### 3.3. SimpleApplicationEventMulticaster.invokeListener
+> - 如果有自定义的错误处理器，则在错误处理器中处理，没有则直接调用doInvokeListener（调用当前监听器onApplicationEvent方法），做监听方法的调用
+```java
+	protected void invokeListener(ApplicationListener<?> listener, ApplicationEvent event) {
+        // 默认为空，除非是自定义的组播器，手动定义了错误处理器
+		ErrorHandler errorHandler = getErrorHandler();
+		if (errorHandler != null) {
+			try {
+				doInvokeListener(listener, event);
+			}
+			catch (Throwable err) {
+				errorHandler.handleError(err);
+			}
+		}
+		else {
+			doInvokeListener(listener, event);
+		}
+	}
+
+    private void doInvokeListener(ApplicationListener listener, ApplicationEvent event) {
+        try {
+            // 调用当前监听器onApplicationEvent方法，做监听方法的调用
+            listener.onApplicationEvent(event);
+        }
+        catch (ClassCastException ex) { ... }
+    }
+```
+
+#### 3.3.1. ApplicationListenerMethodAdapter.onApplicationEvent
+> - 常规的事件监听方法，向上述栗子的onNotifyOtherSystemEvent，用@EventListener标注的
+>   - 在上文2.1.4.2节就讲到，在IOC容器管理时，就对@EventListener标注的监听方法解析，生成监听器方法适配器ApplicationListenerMethodAdapter
+> - 最后通过processEvent对监听事件处理
+
+
+```java
+	public void onApplicationEvent(ApplicationEvent event) {
+        processEvent(event);
+    }
+
+	public void processEvent(ApplicationEvent event) {
+		Object[] args = resolveArguments(event);
+        // 判断该监听方法适配器能否处理当前事件
+		if (shouldHandle(event, args)) {
+            // 做实际调用监听方法，其实就是反射调用
+			Object result = doInvoke(args);
+			if (result != null) {
+                // 如果有返回值,则把返回值继续当成一个事件发布
+				handleResult(result);
+			}
+			else {
+				logger.trace("No result object given - no result to handle");
+			}
+		}
+	}
+
+    private boolean shouldHandle(ApplicationEvent event, @Nullable Object[] args) {
+        if (args == null) {
+            return false;
+        }
+        // @EventListener的condition属性处理，返回true即当前适配器可处理当前事件
+        String condition = getCondition();
+        if (StringUtils.hasText(condition)) {
+            Assert.notNull(this.evaluator, "EventExpressionEvaluator must not be null");
+            return this.evaluator.condition(condition, event, this.targetMethod, this.methodKey, args, this.applicationContext);
+        }
+        return true;
+    }
+```
+
+#### 3.3.2. ApplicationListenerMethodAdapter.doInvoke
+> - 就是通过反射调用监听方法，适配器里面的method，beanName等等，在创建ApplicationListenerMethodAdapter就已经赋值了
+
+```java
+protected Object doInvoke(Object... args) {
+        // 通过beanName获取目标对象
+		Object bean = getTargetBean();
+		if (bean.equals(null)) {
+			return null;
+		}
+
+		ReflectionUtils.makeAccessible(this.method);
+		try {
+            // 通过反射调用目标对象方法
+			return this.method.invoke(bean, args);
+		}
+		catch (IllegalArgumentException ex) { ... }
+	}
+```
+
+## 4. @TransactionalEventListener底层原理
+> - 底层原理和@EventListener差不多，区别在于，它使用的是ApplicationListenerMethodTransactionalAdapter监听方法适配器
+> - 让我们看看它的onApplicationEvent方法
+
+### 4.1. ApplicationListenerMethodTransactionalAdapter.onApplicationEvent
+> - 创建一个事务同步的事件适配器TransactionSynchronizationEventAdapter，实现了TransactionSynchronization
+>   - 事务完成之后会获取所有的TransactionSynchronization，触发afterCompletion方法
+> - 使用了事务同步管理器（TransactionSynchronizationManager.registerSynchronization）来注册同步任务
+>   - 就是将当前适配器添加到事务同步管理器TransactionSynchronizationManager的内部集合synchronizations里头
+> - 在事务完成之后会触发TransactionSynchronizationEventAdapter的afterCompletion钩子方法
+>   - 会调用processEvent方法和@EventListener一样
+```java
+class ApplicationListenerMethodTransactionalAdapter extends ApplicationListenerMethodAdapter {
+
+    private final TransactionalEventListener annotation;
+
+    @Override
+    public void onApplicationEvent(ApplicationEvent event) {
+        // 事务活跃状态
+        if (TransactionSynchronizationManager.isSynchronizationActive() &&
+                TransactionSynchronizationManager.isActualTransactionActive()) {
+            // 创建一个事务同步的事件适配器TransactionSynchronizationEventAdapter
+            TransactionSynchronization transactionSynchronization = createTransactionSynchronization(event);
+            // 通过事务同步管理器注册任务
+            TransactionSynchronizationManager.registerSynchronization(transactionSynchronization);
+        }
+        ... ...
+    }
+
+    private TransactionSynchronization createTransactionSynchronization(ApplicationEvent event) {
+        return new TransactionSynchronizationEventAdapter(this, event, this.annotation.phase());
+    }
+
+
+    private static class TransactionSynchronizationEventAdapter extends TransactionSynchronizationAdapter {
+
+        private final ApplicationListenerMethodAdapter listener;
+
+        private final ApplicationEvent event;
+
+        private final TransactionPhase phase;
+
+        public TransactionSynchronizationEventAdapter(ApplicationListenerMethodAdapter listener,
+                                                      ApplicationEvent event, TransactionPhase phase) {
+
+            this.listener = listener;
+            this.event = event;
+            this.phase = phase;
+        }
+
+        @Override
+        public int getOrder() {
+            return this.listener.getOrder();
+        }
+
+        @Override
+        public void beforeCommit(boolean readOnly) {
+            if (this.phase == TransactionPhase.BEFORE_COMMIT) {
+                processEvent();
+            }
+        }
+
+        @Override
+        public void afterCompletion(int status) {
+            if (this.phase == TransactionPhase.AFTER_COMMIT && status == STATUS_COMMITTED) {
+                processEvent();
+            }
+            else if (this.phase == TransactionPhase.AFTER_ROLLBACK && status == STATUS_ROLLED_BACK) {
+                processEvent();
+            }
+            else if (this.phase == TransactionPhase.AFTER_COMPLETION) {
+                processEvent();
+            }
+        }
+
+        protected void processEvent() {
+            this.listener.processEvent(this.event);
+        }
+    }
+
+}
+
+```

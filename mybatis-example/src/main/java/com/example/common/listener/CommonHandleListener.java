@@ -1,17 +1,15 @@
 package com.example.common.listener;
 
+import com.example.common.model.dto.CommonEventDTO;
+import com.example.common.model.dto.NotifySystemDTO;
+import com.example.common.service.CommonConfigService;
+import com.example.utils.TransactionalExecutionUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-
-import com.example.common.model.dto.CommonEventDTO;
-import com.example.common.model.dto.NotifySystemDTO;
-import com.example.common.service.CommonConfigService;
-import com.example.utils.TransactionalExecutionUtil;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 通用事件监听器
@@ -25,6 +23,7 @@ public class CommonHandleListener {
     @Autowired
     private CommonConfigService commonConfigService;
 
+//    @Order(value = 10)
     @EventListener(condition = "#eventDTO.source == T(com.example.common.listener.CommonHandleListener).NOTIFY_OTHER_SYSTEM_EVENT")
     public void onNotifyOtherSystemEvent(CommonEventDTO eventDTO) {
         log.info("EventListener事务提交后执行");
@@ -41,6 +40,7 @@ public class CommonHandleListener {
         }
     }
 
+//    @Order(value = 100)
     @TransactionalEventListener(
         // 监听的阶段
         phase = TransactionPhase.AFTER_COMMIT,
