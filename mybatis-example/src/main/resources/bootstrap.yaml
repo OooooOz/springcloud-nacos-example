@@ -69,3 +69,7 @@ wechatwork:
     - corpId: corpId222
       corpSecret: corpSecret222
       appCode: appCode222
+
+# schedule 开关,默认为开启，设置为false则关闭
+schedule:
+  enabled: true
