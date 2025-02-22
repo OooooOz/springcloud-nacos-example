@@ -1,16 +1,16 @@
 package com.example.cover;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
 import com.alibaba.fastjson.JSON;
+import com.example.cover.mapper.UserInfoAssembler;
 import com.example.cover.mapper.UserInfoCover;
 import com.example.cover.po.JobPO;
 import com.example.cover.po.UserInfoPO;
 import com.example.cover.vo.UserInfoVO;
 import com.google.common.collect.Lists;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapStructCoverTest {
 
@@ -40,7 +40,7 @@ public class MapStructCoverTest {
         UserInfoPO po = UserInfoPO.builder().userId(1L).userName("lisi").job(jobPO).build();
         System.out.println(JSON.toJSONString(po));  // {"job":{"jobId":1,"jobName":"java"},"userId":1,"userName":"lisi"}
 
-        UserInfoVO userInfoVO = UserInfoCover.INSTANCE.toConvertAfter(po);
-        System.out.println(JSON.toJSONString(userInfoVO));  // {"job":{"jName":"java","jobId":1},"name":"LISI","userId":1}
+        UserInfoVO vo = UserInfoAssembler.INSTANCE.map(po);
+        System.out.println(JSON.toJSONString(vo));  // {"job":{"jName":"java","jobId":1},"name":"LISI","userId":1}
     }
 }
