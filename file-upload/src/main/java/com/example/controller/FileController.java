@@ -1,16 +1,6 @@
 package com.example.controller;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StopWatch;
-import org.springframework.web.bind.annotation.*;
-
+import cn.hutool.core.bean.BeanUtil;
 import com.example.model.BaseResponse;
 import com.example.model.dto.FileDownloadRequest;
 import com.example.model.dto.FileUploadDTO;
@@ -18,9 +8,16 @@ import com.example.model.dto.FileUploadParamDTO;
 import com.example.model.vo.FileUploadVo;
 import com.example.service.FileService;
 import com.example.util.FileUtils;
-
-import cn.hutool.core.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StopWatch;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @Slf4j
 @CrossOrigin

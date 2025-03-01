@@ -12,7 +12,7 @@ CREATE TABLE `t_common_config`
 
 
 CREATE TABLE `t_key_log` (
- `id` TINYINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+ `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
  `module` varchar(100) DEFAULT NULL COMMENT '模块',
  `func` varchar(100) DEFAULT NULL COMMENT '功能',
  `repeat_key` varchar(100) DEFAULT NULL COMMENT '不重复添加判断key，不为空则模块-功能-key判重',
