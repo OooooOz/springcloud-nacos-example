@@ -64,6 +64,15 @@ public class BaseResponse<T> implements Serializable {
         return resp;
     }
 
+    public static <T> BaseResponse<T> FAILURE(T t) {
+        BaseResponse<T> resp = new BaseResponse<>();
+        resp.setMessage(ResponseEnum.FAILURE.getMsg());
+        resp.setCode(ResponseEnum.FAILURE.getCode());
+        resp.setData(t);
+        resp.setSuccess(false);
+        return resp;
+    }
+
     public static <T> BaseResponse<T> FAILURE(ResponseEnum responseEnum) {
         BaseResponse<T> resp = new BaseResponse<>();
         resp.setMessage(responseEnum.getMsg());

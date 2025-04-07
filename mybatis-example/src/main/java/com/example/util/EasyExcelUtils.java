@@ -1,13 +1,5 @@
 package com.example.util;
 
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.write.builder.ExcelWriterBuilder;
-import com.alibaba.fastjson.util.IOUtils;
-import com.opencsv.bean.CsvToBeanBuilder;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -15,6 +7,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.write.builder.ExcelWriterBuilder;
+import com.alibaba.fastjson.util.IOUtils;
+import com.example.model.BusinessException;
+import com.example.utils.ExceptionUtil;
+import com.opencsv.bean.CsvToBeanBuilder;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * EasyExcel工具类
@@ -120,7 +125,7 @@ public class EasyExcelUtils {
      * @param fileName 文件名
      * @param response
      */
-    private static void initResponseHeader(String fileName, HttpServletResponse response) throws UnsupportedEncodingException {
+    public static void initResponseHeader(String fileName, HttpServletResponse response) throws UnsupportedEncodingException {
         fileName = URLEncoder.encode(fileName, "UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -171,4 +176,12 @@ public class EasyExcelUtils {
         return reports;
     }
 
+    public static InputStream getInputStreamByFile(MultipartFile file) {
+        try {
+            return file.getInputStream();
+        } catch (IOException e) {
+            log.info("获取文件信息有误：{}", ExceptionUtil.printFullStackTraceAndIgnoreLineFeed(e));
+            throw BusinessException.failMsg("获取文件信息有误");
+        }
+    }
 }
