@@ -3,7 +3,7 @@ package com.example.importing.model.vo;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.commons.exporting.template.ExcelDynamicSelect;
+import org.commons.exporting.infrastructure.handle.ExcelDynamicSelect;
 
 import com.example.common.model.entity.CommonConfig;
 import com.example.common.service.CommonConfigService;
