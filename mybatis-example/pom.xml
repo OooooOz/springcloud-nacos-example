@@ -67,7 +67,12 @@
         </dependency>
         <dependency>
             <groupId>com.ex-import</groupId>
-            <artifactId>commons-ex-importing-boot-starter</artifactId>
+            <artifactId>commons-exmporting-sdk</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ex-import</groupId>
+            <artifactId>commons-importing-starter</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

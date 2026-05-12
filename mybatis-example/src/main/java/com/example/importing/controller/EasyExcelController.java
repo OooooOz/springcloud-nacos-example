@@ -1,12 +1,15 @@
 package com.example.importing.controller;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.commons.exporting.infrastructure.handle.SelectedSheetWriteHandler;
-import org.commons.exporting.infrastructure.util.ExcelSelectedResolveUtil;
+import cn.hutool.core.io.file.FileNameUtil;
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.support.ExcelTypeEnum;
+import com.commons.exporting.infrastructure.handle.SelectedSheetWriteHandler;
+import com.commons.exporting.infrastructure.util.ExcelSelectedResolveUtil;
+import com.example.importing.model.vo.RequirementTemplateExportVo;
+import com.example.model.BaseResponse;
+import com.example.model.BusinessException;
+import com.example.util.EasyExcelUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.commons.importing.Importer;
 import org.commons.importing.Importing;
 import org.commons.importing.configure.AbstractCommonDataListener;
@@ -15,15 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.excel.EasyExcelFactory;
-import com.alibaba.excel.support.ExcelTypeEnum;
-import com.example.importing.model.vo.RequirementTemplateExportVo;
-import com.example.model.BaseResponse;
-import com.example.model.BusinessException;
-import com.example.util.EasyExcelUtils;
-
-import cn.hutool.core.io.file.FileNameUtil;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * 文件模板导出
@@ -35,8 +32,10 @@ public class EasyExcelController {
 
     @Autowired
     private Importing importing;
+
     /**
      * 导出模板
+     *
      * @param response
      */
     @GetMapping("/export")
@@ -92,7 +91,7 @@ public class EasyExcelController {
 //            }
 
             @Override
-            protected void singleCheckData (Object data) {
+            protected void singleCheckData(Object data) {
                 log.info("[testImport#checkData]");
                 if (data instanceof RequirementTemplateExportVo) {
                     RequirementTemplateExportVo vo = (RequirementTemplateExportVo) data;
@@ -105,7 +104,7 @@ public class EasyExcelController {
 
         ImportResultVO importResultVO = importer.getImportResultVO();
         if (importResultVO.getFailure().get() > 0) {
-           return BaseResponse.FAILURE(importResultVO);
+            return BaseResponse.FAILURE(importResultVO);
         }
         return BaseResponse.SUCCESS(importResultVO);
     }

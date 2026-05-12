@@ -1,9 +1,5 @@
 package com.example.importing.model.vo;
 
-import java.io.Serializable;
-
-import org.commons.exporting.infrastructure.handle.ExcelSelected;
-
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.*;
 import com.alibaba.excel.enums.BooleanEnum;
@@ -11,9 +7,11 @@ import com.alibaba.excel.enums.poi.BorderStyleEnum;
 import com.alibaba.excel.enums.poi.FillPatternTypeEnum;
 import com.alibaba.excel.enums.poi.HorizontalAlignmentEnum;
 import com.alibaba.excel.enums.poi.VerticalAlignmentEnum;
-
+import com.commons.exporting.infrastructure.handle.ExcelSelected;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * 要求信息导出数据模型
@@ -31,6 +29,7 @@ import lombok.NoArgsConstructor;
         borderRight = BorderStyleEnum.THIN, borderTop = BorderStyleEnum.THIN, borderBottom = BorderStyleEnum.THIN)
 public class RequirementTemplateExportVo implements Serializable {
 
+    private static final long serialVersionUID = 2766881189899695456L;
     /**
      * 项目名称
      */
