@@ -67,13 +67,8 @@
         </dependency>
         <dependency>
             <groupId>com.ex-import</groupId>
-            <artifactId>commons-exmporting-sdk</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ex-import</groupId>
-            <artifactId>commons-importing-starter</artifactId>
-            <version>1.0.0</version>
+            <artifactId>commons-ex-importing-sdk</artifactId>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
